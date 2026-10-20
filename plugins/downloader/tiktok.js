@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+const { fetchJson } = require('../../lib/http')
 
 module.exports = {
   name: 'tiktok',
@@ -13,8 +13,7 @@ module.exports = {
     let sent = 0 // media already delivered: no refund after that
     try {
       await reply(config.messages.wait)
-      const res = await fetch(`https://api.i1void.is-a.dev/downloader/tiktok?url=${encodeURIComponent(text)}`)
-      const json = await res.json()
+      const json = await fetchJson(`${config.apiBase}/downloader/tiktok?url=${encodeURIComponent(text)}`)
       if (!json?.status || !json.result) {
         refundLimit()
         return reply(config.messages.error)

@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+const { fetchJson } = require('../../lib/http')
 
 module.exports = {
   name: 'facebook',
@@ -12,8 +12,7 @@ module.exports = {
     if (!useLimit()) return
     try {
       await reply(config.messages.wait)
-      const res = await fetch(`https://api.i1void.is-a.dev/downloader/facebook?url=${encodeURIComponent(text)}`)
-      const json = await res.json()
+      const json = await fetchJson(`${config.apiBase}/downloader/facebook?url=${encodeURIComponent(text)}`)
       if (!json?.status || !json.result) {
         refundLimit()
         return reply(config.messages.error)
