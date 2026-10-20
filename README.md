@@ -100,6 +100,5 @@ A broken plugin or a duplicate command name is skipped and reported in the conso
 
 Works on any VPS with Node.js 22.13+ and FFmpeg installed. Run with PM2 for auto-restart on crash.
 
-### # Disclaimer
-
-Built on Baileys, an unofficial WhatsApp Web API. Using it may violate WhatsApp's Terms of Service and can result in account restrictions or bans. Use at your own risk.
+> [!DISCLAIMER]
+> Built on Baileys, an unofficial WhatsApp Web API. Using it may violate WhatsApp's Terms of Service and can result in account restrictions or bans. Use at your own risk.
