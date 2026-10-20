@@ -3,11 +3,15 @@ const fs = require('fs')
 const chalk = require('chalk')
 const config = require('./config')
 const { sleep, getGroupAdmins } = require('./lib/myfunc')
-const { getUser, updateUser, getTimezone } = require('./lib/db')
-const { getBanned, getPremium } = require('./lib/access')
+const { getUser, spendLimit, restoreLimit, getTimezone } = require('./lib/db')
+const { isBanned, hasPremium } = require('./lib/access')
 const { getDisabledPlugins } = require('./lib/settings')
 const { suggestCommands } = require('./lib/suggest')
 const { getPlugin, listPlugins } = require('./lib/pluginLoader')
+const { createCooldown } = require('./lib/cooldown')
+
+const cooldown = createCooldown(config.cooldown ?? 3)
+const PHONE_ARG = /^@?\+?\d[\d-]{7,}$/
 
 // Returns the config.messages key to reply with, or null when allowed.
 // adminOnly / botAdmin imply groupOnly. The owner bypasses adminOnly but NOT botAdmin.
@@ -61,7 +65,7 @@ module.exports = async (sock, m, store) => {
     const senderNumber = sender.split('@')[0]
     const isOwner = config.owner.map((v) => v.replace(/\D/g, '')).includes(senderNumber)
 
-    if (getBanned().includes(sender) && !isOwner) return
+    if (isBanned(sender) && !isOwner) return
 
     const reply = (teks, opts = {}) => sock.sendMessage(m.chat, { text: teks, ...opts }, { quoted: m })
 
@@ -75,7 +79,12 @@ module.exports = async (sock, m, store) => {
       return reply('[ System Notice ] This command is disabled by the owner')
     }
 
-    const isPremium = isOwner || getPremium().includes(sender)
+    if (!isOwner) {
+      const gate = cooldown.check(sender)
+      if (!gate.ok) return gate.notify ? reply(`${config.messages.cooldown} (${gate.wait}s)`) : undefined
+    }
+
+    const isPremium = isOwner || hasPremium(sender)
     const user = getUser(sender, config)
     if (isPremium) user.premium = true
 
@@ -94,21 +103,19 @@ module.exports = async (sock, m, store) => {
         ? m.mentionedJid
         : m.quoted
         ? [m.quoted.sender]
-        : args[0]
-        ? [args[0].replace(/\D/g, '') + '@s.whatsapp.net']
+        : PHONE_ARG.test(args[0] || '')
+        ? [`${args[0].replace(/\D/g, '')}@s.whatsapp.net`]
         : []
 
-    // Reads the user fresh on every call, so two commands running at the same
-    // time can never spend the same (stale) limit value twice.
+    // Spending a point is one atomic database update, so two commands running at
+    // the same time can never spend the same point twice.
     let spent = false
     const useLimit = () => {
       if (isPremium) return true
-      const current = getUser(sender, config)
-      if (current.limit < 1) {
+      if (!spendLimit(sender, config)) {
         reply(`${config.messages.limitHabis}\nYour limit resets every day at 00:00 (${getTimezone(config)}).`)
         return false
       }
-      updateUser(sender, { limit: current.limit - 1 })
       spent = true
       return true
     }
@@ -118,10 +125,10 @@ module.exports = async (sock, m, store) => {
     const refundLimit = () => {
       if (!spent) return
       spent = false
-      updateUser(sender, { limit: getUser(sender, config).limit + 1 })
+      restoreLimit(sender)
     }
 
-    await plugin.execute({
+    const ctx = {
       sock,
       m,
       store,
@@ -144,7 +151,16 @@ module.exports = async (sock, m, store) => {
       groupAdmins,
       useLimit,
       refundLimit,
-    })
+    }
+
+    // Safety net: a plugin that throws gets the limit back and the user gets an answer.
+    try {
+      await plugin.execute(ctx)
+    } catch (err) {
+      console.error(`[plugin:${plugin.name}]`, err)
+      refundLimit()
+      reply(config.messages.error).catch(() => {})
+    }
   } catch (err) {
     console.error(err)
   }

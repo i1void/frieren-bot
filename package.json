@@ -1,5 +1,5 @@
 {
-  "name": "hitori-bot",
+  "name": "frieren-bot",
   "version": "1.0.0-beta",
   "description": "WhatsApp Bot (Baileys)",
   "main": "index.js",
@@ -8,8 +8,16 @@
   },
   "author": "g.dev/nodt",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i1void/frieren-bot.git"
+  },
+  "homepage": "https://github.com/i1void/frieren-bot#readme",
+  "bugs": {
+    "url": "https://github.com/i1void/frieren-bot/issues"
+  },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.13.0"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "6.7.24",

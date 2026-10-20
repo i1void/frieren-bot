@@ -1,9 +1,9 @@
-# CRUX BOT (Base)
+# FRIEREN BOT (Base)
 
 > Base WhatsApp bot built with Baileys.
 > ⭐ Don't forget to star this repo if you find it useful!
 
-[![GitHub stars](https://img.shields.io/github/stars/i1void/crux-bot?style=flat-square&color=ff5e5b)](https://github.com/i1void/crux-bot/stargazers) [![GitHub forks](https://img.shields.io/github/forks/i1void/crux-bot?style=flat-square)](https://github.com/i1void/crux-bot/network/members) [![License](https://img.shields.io/github/license/i1void/crux-bot?style=flat-square)](https://github.com/i1void/crux-bot/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/i1void/frieren-bot?style=flat-square&color=ff5e5b)](https://github.com/i1void/frieren-bot/stargazers) [![GitHub forks](https://img.shields.io/github/forks/i1void/frieren-bot?style=flat-square)](https://github.com/i1void/frieren-bot/network/members) [![License](https://img.shields.io/github/license/i1void/frieren-bot?style=flat-square)](https://github.com/i1void/frieren-bot/blob/main/LICENSE)
 
 ## Features
 
@@ -18,8 +18,8 @@
 
 ```
 # Clone repository
-git clone https://github.com/i1void/necoarc-bot.git
-cd necoarc-bot
+git clone https://github.com/i1void/frieren-bot.git
+cd frieren-bot
 
 # Install dependencies
 npm install
@@ -30,6 +30,16 @@ npm start
 
 On first run, enter your WhatsApp number when prompted, then input the pairing code shown in the console into WhatsApp > Linked Devices > Link with phone number.
 
+## Requirements
+
+- Node.js 22.13 or newer. Data is stored with the built-in `node:sqlite`, so there is no database package to install.
+
+## Database
+
+Everything (users and limits, premium, bans, welcome texts, antilink, disabled commands) lives in one SQLite file: `storage/database/bot.db`. While the bot runs, `bot.db-wal` and `bot.db-shm` appear next to it. To back up, stop the bot and copy all three.
+
+Upgrading from the old JSON files: just start the bot. They are imported once and the originals are moved to `storage/database/json-backup/`.
+
 ## Config
 
 All settings live in `config.js`: bot number, owner, prefixes, sticker pack/author name, free/premium limit.
@@ -38,6 +48,8 @@ Optional keys:
 
 - `timezone` — daily limit reset at 00:00 in this timezone (default `Asia/Jakarta`)
 - `logChat: false` — turn off the one-line-per-message log in the console
+- `cooldown` — seconds a user must wait between commands (default `3`, owner is exempt, `0` = off)
+- `apiBase` — base URL of the API used by the downloader plugins
 
 ## Structure
 
@@ -46,6 +58,15 @@ Optional keys:
 - `plugins/` — one file per command
 - `lib/` — helper functions
 - `storage/` — database & media
+
+## Run with PM2 (recommended)
+
+```
+npm i -g pm2
+pm2 start ecosystem.config.js
+```
+
+The owner `restart` command only works properly under a process manager like this.
 
 ## Add a command
 
@@ -77,7 +98,7 @@ A broken plugin or a duplicate command name is skipped and reported in the conso
 
 ## Deploy
 
-Works on any VPS with Node.js 18+ and FFmpeg installed. Run with PM2 for auto-restart on crash.
+Works on any VPS with Node.js 22.13+ and FFmpeg installed. Run with PM2 for auto-restart on crash.
 
 ## Disclaimer
 
