@@ -5,7 +5,6 @@ const {
   useMultiFileAuthState,
   fetchLatestWaWebVersion,
   jidDecode,
-  proto,
 } = require('@whiskeysockets/baileys')
 const pino = require('pino')
 const chalk = require('chalk')
@@ -13,7 +12,7 @@ const readline = require('readline')
 const qrcode = require('qrcode-terminal')
 const { Boom } = require('@hapi/boom')
 const config = require('./config')
-const { smsg, getBuffer, sleep, logMessage } = require('./lib/myfunc')
+const { smsg, logMessage } = require('./lib/myfunc')
 const { welcomeHandler } = require('./lib/welcome')
 const { handleAntiLink } = require('./lib/antilink')
 const { loadPlugins } = require('./lib/pluginLoader')
@@ -40,12 +39,17 @@ function clearConsole() {
 function showBanner() {
   try {
     const CFonts = require('cfonts')
-    CFonts.say('HITORI BOT', { font: 'tiny', align: 'center', colors: ['system'] })
-    CFonts.say('Github : https://github.com/i1void/hitori-bot', { font: 'console', align: 'center', colors: ['system'] })
+    CFonts.say('FRIEREN BOT', { font: 'tiny', align: 'center', colors: ['system'] })
   } catch {
-    console.log(chalk.bold('HITORI BOT'))
-    console.log('Github : https://github.com/i1void/hitori-bot')
+    console.log(chalk.bold('FRIEREN BOT'))
   }
+}
+
+// Reconnect after a short pause so a failing connection cannot spin in a tight loop.
+// The restart WhatsApp asks for right after pairing (restartRequired) happens at once.
+function reconnect(reason) {
+  const delay = reason === DisconnectReason.restartRequired ? 0 : 3000
+  setTimeout(connectToWhatsApp, delay)
 }
 
 async function connectToWhatsApp() {
@@ -124,28 +128,32 @@ async function connectToWhatsApp() {
 
   sock.serializeM = (m) => smsg(sock, m, store)
 
-  sock.ev.on('messages.upsert', async (chatUpdate) => {
-    try {
-      const mek = chatUpdate.messages[0]
-      if (!mek.message) return
-      mek.message =
-        Object.keys(mek.message)[0] === 'ephemeralMessage'
-          ? mek.message.ephemeralMessage.message
-          : mek.message
-      if (mek.key?.remoteJid === 'status@broadcast') return
-      if (!config.isPublic && !mek.key.fromMe && chatUpdate.type === 'notify') return
-      if (mek.key.id?.startsWith('BAE5') && mek.key.id.length === 16) return
+  // Only live messages ("notify") are handled. "append" carries old history and
+  // must never re-run commands. One upsert can hold several messages: handle all.
+  sock.ev.on('messages.upsert', async ({ messages, type }) => {
+    if (type !== 'notify') return
+    for (const mek of messages) {
+      try {
+        if (!mek.message) continue
+        mek.message =
+          Object.keys(mek.message)[0] === 'ephemeralMessage'
+            ? mek.message.ephemeralMessage.message
+            : mek.message
+        if (mek.key?.remoteJid === 'status@broadcast') continue
+        if (!config.isPublic && !mek.key.fromMe) continue
+        if (mek.key.id?.startsWith('BAE5') && mek.key.id.length === 16) continue
 
-      const m = smsg(sock, mek, store)
-      if (!m) return
-      logMessage(sock, m)
-      if (m.isGroup) {
-        const handled = await handleAntiLink(sock, m, m.chat).catch(() => false)
-        if (handled) return
+        const m = smsg(sock, mek, store)
+        if (!m) continue
+        logMessage(sock, m)
+        if (m.isGroup) {
+          const handled = await handleAntiLink(sock, m, m.chat).catch(() => false)
+          if (handled) continue
+        }
+        require('./handler')(sock, m, store)
+      } catch (err) {
+        console.error(err)
       }
-      require('./handler')(sock, m, store)
-    } catch (err) {
-      console.error(err)
     }
   })
 
@@ -188,7 +196,7 @@ async function connectToWhatsApp() {
         case DisconnectReason.restartRequired:
         case DisconnectReason.timedOut:
           console.log(chalk.yellow('Connection lost, reconnecting...'))
-          connectToWhatsApp()
+          reconnect(reason)
           break
         case DisconnectReason.connectionReplaced:
           console.log(chalk.red('Session is being used elsewhere. Restart this bot if this should be the active session.'))
@@ -200,7 +208,7 @@ async function connectToWhatsApp() {
           break
         default:
           console.log(chalk.yellow(`Disconnected (${reason}), attempting to reconnect...`))
-          connectToWhatsApp()
+          reconnect(reason)
       }
     } else if (connection === 'open') {
       clearConsole()
@@ -211,6 +219,10 @@ async function connectToWhatsApp() {
 
   return sock
 }
+
+// A stray error in one handler must not take the whole bot down.
+process.on('unhandledRejection', (err) => console.error('Unhandled rejection:', err))
+process.on('uncaughtException', (err) => console.error('Uncaught exception:', err))
 
 showBanner()
 loadPlugins()
