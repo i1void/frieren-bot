@@ -23,8 +23,8 @@ module.exports = {
   owner: ['XXXXXXXXXXX'],
   ownerName: 'Owner',
   botName: 'Frieren Bot',
-  packName: 'Frieren', //pack+author for sticker 
-  authorName: 'Void',
+  packName: 'Frieren', // sticker pack name
+  authorName: 'Void', // sticker author name
   prefixes: ['#', '.', '!', '/'],
   isPublic: true,
   // Anti-spam for commands (the owner is exempt). A command sent within `cooldown` seconds of the previous
@@ -36,13 +36,5 @@ module.exports = {
     premium: 10000,
   },
   timezone: 'Asia/Jakarta',
-  // YouTube downloads (ytmp3, ytmp4, play) go through yt-dlp, which must be installed on the server.
-  youtube: {
-    ytdlpPath: 'yt-dlp', // command name or full path of the yt-dlp binary
-    maxMinutes: 30, // longest video that is accepted
-    maxSizeMb: 60, // biggest file that is sent
-    maxVideoHeight: 720, // ytmp4 quality cap
-    maxConcurrent: 2, // downloads running at the same time
-  },
   messages: global.mess,
 }
