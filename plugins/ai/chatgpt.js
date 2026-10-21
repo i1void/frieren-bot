@@ -12,7 +12,7 @@ module.exports = {
     try {
       sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
       const json = await fetchJson(`${config.apiBase}/ai/chatgpt?text=${encodeURIComponent(text)}`, {
-        timeout: 60000, // AI answers can be slow
+        timeout: 60000, // AI answers can be slow.
       })
       const answer = json?.result?.response
       if (!json?.status || !answer) {
