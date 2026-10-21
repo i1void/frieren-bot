@@ -1,11 +1,10 @@
 const { fetchJson } = require('../../lib/http')
 
 module.exports = {
-  name: 'fb',
-  aliases: ['facebook'],
+  usage: ['fb'],
+  hidden: ['facebook'],
+  use: 'link',
   category: 'downloader',
-  description: 'Download Facebook video',
-  usage: '<link>',
   limit: true,
   execute: async ({ sock, m, config, prefix, text, reply, useLimit, refundLimit }) => {
     if (!text) return reply(`Enter a Facebook link.\nExample: ${prefix}fb https://facebook.com/watch/xxxx`)

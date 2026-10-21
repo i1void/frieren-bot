@@ -1,11 +1,10 @@
 const { igdl } = require('ruhend-scraper')
 
 module.exports = {
-  name: 'ig',
-  aliases: ['instagram', 'igdl'],
+  usage: ['ig'],
+  hidden: ['instagram', 'igdl'],
+  use: 'link',
   category: 'downloader',
-  description: 'Download Instagram post / reel',
-  usage: '<link>',
   limit: true,
   execute: async ({ sock, m, config, prefix, text, reply, sleep, useLimit, refundLimit }) => {
     if (!text) return reply(`Enter an Instagram link.\nExample: ${prefix}ig https://instagram.com/p/xxxx`)

@@ -1,11 +1,10 @@
 const { fetchJson } = require('../../lib/http')
 
 module.exports = {
-  name: 'tt',
-  aliases: ['tiktok'],
+  usage: ['tt'],
+  hidden: ['tiktok'],
+  use: 'link',
   category: 'downloader',
-  description: 'Download TikTok video / slideshow',
-  usage: '<link>',
   limit: true,
   execute: async ({ sock, m, config, prefix, text, reply, sleep, useLimit, refundLimit }) => {
     if (!text) return reply(`Enter a TikTok link.\nExample: ${prefix}tiktok https://vt.tiktok.com/xxxx`)

@@ -1,11 +1,9 @@
 const { findYoutubeUrl, download, describeError } = require('../../lib/ytdlp')
 
 module.exports = {
-  name: 'ytmp4',
-  aliases: [],
+  usage: ['ytmp4'],
+  use: 'link',
   category: 'downloader',
-  description: 'Download YouTube video (mp4)',
-  usage: '<link>',
   limit: true,
   execute: async ({ sock, m, config, prefix, command, text, reply, useLimit, refundLimit }) => {
     const url = findYoutubeUrl(text)

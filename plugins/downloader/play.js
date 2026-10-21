@@ -2,11 +2,9 @@ const yts = require('yt-search')
 const { download, describeError } = require('../../lib/ytdlp')
 
 module.exports = {
-  name: 'play',
-  aliases: [],
+  usage: ['play'],
+  use: 'judul',
   category: 'downloader',
-  description: 'Search and send a song from YouTube',
-  usage: '<judul>',
   limit: true,
   execute: async ({ sock, m, config, prefix, text, reply, useLimit, refundLimit }) => {
     if (!text) return reply(`Example: ${prefix}play song title`)
