@@ -6,13 +6,13 @@ module.exports = {
   use: 'question',
   category: 'ai',
   limit: true,
-  execute: async ({ config, prefix, command, text, reply, useLimit, refundLimit }) => {
+  execute: async ({ sock, m, config, prefix, command, text, reply, useLimit, refundLimit }) => {
     if (!text) return reply(`Ask something.\nExample: ${prefix}${command} Hi`)
     if (!useLimit()) return
     try {
-      await reply(config.messages.wait)
+      sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
       const json = await fetchJson(`${config.apiBase}/ai/gemini?text=${encodeURIComponent(text)}`, {
-        timeout: 60000, // AI answers can be slow.
+        timeout: 60000, // AI answers can be slow
       })
       const answer = json?.result?.response
       if (!json?.status || !answer) {
