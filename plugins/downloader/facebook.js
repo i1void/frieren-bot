@@ -10,7 +10,7 @@ module.exports = {
     if (!text) return reply(`Enter a Facebook link.\nExample: ${prefix}fb https://facebook.com/watch/xxxx`)
     if (!useLimit()) return
     try {
-      await reply(config.messages.wait)
+      sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
       const json = await fetchJson(`${config.apiBase}/downloader/facebook?url=${encodeURIComponent(text)}`)
       if (!json?.status || !json.result) {
         refundLimit()

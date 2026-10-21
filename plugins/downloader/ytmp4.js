@@ -10,7 +10,7 @@ module.exports = {
     if (!url) return reply(`Enter a YouTube link.\nExample: ${prefix}${command} https://youtu.be/xxxx`)
     if (!useLimit()) return
     try {
-      await reply(config.messages.wait)
+      sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
       const info = await getInfo(url, config)
       const { buffer, mimetype } = await download(info, 'video')
       await sock.sendMessage(m.chat, { video: buffer, mimetype, caption: cleanTitle(info.title) }, { quoted: m })

@@ -15,7 +15,7 @@ module.exports = {
     if (!useLimit()) return
     let sent = 0 // media already delivered: no refund after that
     try {
-      await reply(config.messages.wait)
+      sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
       const json = await fetchJson(`${config.apiBase}/downloader/twitter?url=${encodeURIComponent(text)}`)
       const { title, media } = json?.result || {}
       if (!json?.status || !media?.length) {

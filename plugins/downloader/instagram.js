@@ -11,7 +11,7 @@ module.exports = {
     if (!useLimit()) return
     let sent = 0 // media already delivered: no refund after that
     try {
-      await reply(config.messages.wait)
+      sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
       const res = await igdl(text)
       const data = res.data || []
       if (!data.length) {
