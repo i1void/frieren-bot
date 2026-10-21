@@ -14,7 +14,6 @@ const { Boom } = require('@hapi/boom')
 const config = require('./config')
 const { smsg, logMessage } = require('./lib/myfunc')
 const { welcomeHandler } = require('./lib/welcome')
-const { handleAntiLink } = require('./lib/antilink')
 const { loadPlugins } = require('./lib/pluginLoader')
 const { downloadMedia, imageToSticker, videoToSticker } = require('./lib/media')
 
@@ -146,10 +145,6 @@ async function connectToWhatsApp() {
         const m = smsg(sock, mek, store)
         if (!m) continue
         logMessage(sock, m)
-        if (m.isGroup) {
-          const handled = await handleAntiLink(sock, m, m.chat).catch(() => false)
-          if (handled) continue
-        }
         require('./handler')(sock, m, store)
       } catch (err) {
         console.error(err)
