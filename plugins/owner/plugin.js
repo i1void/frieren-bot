@@ -4,10 +4,9 @@ const { getDisabledPlugins, setDisabledPlugins, isPluginDisabled } = require('..
 const PROTECTED = ['plugin'] // switching this one off would lock the owner out
 
 module.exports = {
-  name: 'plugin',
-  aliases: ['plugins'],
+  usage: ['plugin'],
+  hidden: ['plugins'],
   category: 'owner',
-  description: 'List, enable or disable commands',
   ownerOnly: true,
   execute: async ({ prefix, command, args, reply }) => {
     const action = (args[0] || 'list').toLowerCase()
@@ -36,7 +35,7 @@ module.exports = {
     if (turnOff && isDisabled) return reply(`${prefix}${target.name} is already disabled.`)
     if (turnOn && !isDisabled) return reply(`${prefix}${target.name} is already enabled.`)
 
-    setDisabledPlugins(turnOff ? [...disabled, target.name] : disabled.filter((n) => n !== target.name && !target.aliases.includes(n)))
+    setDisabledPlugins(turnOff ? [...disabled, target.name] : disabled.filter((n) => n !== target.name && !target.commands.includes(n)))
     reply(turnOff ? `🔴 ${prefix}${target.name} disabled.` : `🟢 ${prefix}${target.name} enabled.`)
   },
 }
