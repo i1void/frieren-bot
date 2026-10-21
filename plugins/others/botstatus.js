@@ -8,7 +8,7 @@ const { getDisabledPlugins } = require('../../lib/settings')
 module.exports = {
   usage: ['botstat'],
   hidden: ['botstatus', 'stat'],
-  category: 'tools',
+  category: 'others',
   execute: async ({ sock, reply }) => {
     const groups = await sock
       .groupFetchAllParticipating()
