@@ -53,7 +53,7 @@ module.exports = {
   usage: ['githubstalk'],
   hidden: ['gitstalk'],
   use: 'username',
-  category: 'tools',
+  category: 'others',
   execute: async ({ sock, m, config, prefix, command, text, reply }) => {
     const username = text.trim().split(/\s+/)[0].replace(/^@/, '')
     if (!username) return reply(`Enter a GitHub username.\nExample: ${prefix}${command} i1void`)
