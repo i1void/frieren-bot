@@ -39,6 +39,7 @@ function showBanner() {
   try {
     const CFonts = require('cfonts')
     CFonts.say('FRIEREN BOT', { font: 'tiny', align: 'center', colors: ['system'] })
+    CFonts.say('Github : https://github.com/i1void/frieren-bot', { font: 'console', align: 'center', colors: ['system'] })
   } catch {
     console.log(chalk.bold('FRIEREN BOT'))
   }
