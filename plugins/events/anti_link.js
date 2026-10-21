@@ -1,4 +1,5 @@
 const { isAntiLinkEnabled } = require('../../lib/antilink')
+const { getGroupAdmins } = require('../../lib/myfunc')
 
 const GROUP_LINK = /https?:\/\/(chat\.whatsapp\.com|wa\.me|www\.whatsapp\.com\/invite)\/[a-zA-Z0-9]+/i
 const numberOf = (jid) => String(jid).split('@')[0]
@@ -13,8 +14,9 @@ module.exports = {
     if (!GROUP_LINK.test(m.text || '') || !isAntiLinkEnabled(m.chat)) return false
 
     const { participants } = await sock.groupMetadata(m.chat)
-    const isAdmin = (jid) => participants.some((p) => p.admin && numberOf(p.id) === numberOf(jid))
-    if (isAdmin(m.sender) || !isAdmin(sock.decodeJid(sock.user.id))) return false
+    const admins = getGroupAdmins(participants, sock.decodeJid)
+    const botIds = [sock.user.id, sock.user.lid].filter(Boolean).map((jid) => sock.decodeJid(jid))
+    if (admins.includes(m.sender) || !botIds.some((id) => admins.includes(id))) return false
 
     await sock.sendMessage(m.chat, { delete: m.key }).catch(() => {})
     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
