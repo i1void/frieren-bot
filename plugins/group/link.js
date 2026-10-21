@@ -1,8 +1,7 @@
 module.exports = {
-  name: 'link',
-  aliases: ['linkgc'],
+  usage: ['link'],
+  hidden: ['linkgc'],
   category: 'group',
-  description: 'Get the group invite link',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

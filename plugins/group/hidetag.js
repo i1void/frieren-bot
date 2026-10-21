@@ -1,9 +1,7 @@
 module.exports = {
-  name: 'hidetag',
-  aliases: [],
+  usage: ['hidetag'],
+  use: 'teks',
   category: 'group',
-  description: 'Mention every member without showing the list',
-  usage: '<teks>',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ groupMetadata, text, reply }) => {

@@ -1,11 +1,9 @@
 const { setLeftStatus } = require('../../lib/welcome')
 
 module.exports = {
-  name: 'left',
-  aliases: [],
+  usage: ['left'],
+  use: 'on/off',
   category: 'group',
-  description: 'Turn the goodbye message on or off',
-  usage: 'on/off',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ m, config, prefix, command, args, reply }) => {

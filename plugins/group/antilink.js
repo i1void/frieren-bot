@@ -1,11 +1,9 @@
 const { readAntiLinkSettings, writeAntiLinkSettings } = require('../../lib/antilink')
 
 module.exports = {
-  name: 'antilink',
-  aliases: [],
+  usage: ['antilink'],
+  use: 'on/off',
   category: 'group',
-  description: 'Kick members who send group invite links',
-  usage: 'on/off',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ m, prefix, args, reply }) => {

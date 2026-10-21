@@ -1,8 +1,6 @@
 module.exports = {
-  name: 'kick',
-  aliases: [],
+  usage: ['kick'],
   category: 'group',
-  description: 'Remove a member from the group',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

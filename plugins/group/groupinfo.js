@@ -1,10 +1,8 @@
 const moment = require('moment-timezone')
 
 module.exports = {
-  name: 'groupinfo',
-  aliases: [],
+  usage: ['groupinfo'],
   category: 'group',
-  description: 'Show group info',
   groupOnly: true,
   execute: async ({ m, groupMetadata, reply }) => {
     if (!groupMetadata) return reply('Failed to fetch group info, please try again.')

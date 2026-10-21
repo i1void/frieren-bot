@@ -1,8 +1,6 @@
 module.exports = {
-  name: 'revoke',
-  aliases: [],
+  usage: ['revoke'],
   category: 'group',
-  description: 'Reset the group invite link',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

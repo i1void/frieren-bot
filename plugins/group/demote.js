@@ -1,8 +1,6 @@
 module.exports = {
-  name: 'demote',
-  aliases: [],
+  usage: ['demote'],
   category: 'group',
-  description: 'Remove the admin role from a member',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

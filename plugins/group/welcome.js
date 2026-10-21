@@ -1,11 +1,9 @@
 const { setWelcomeStatus } = require('../../lib/welcome')
 
 module.exports = {
-  name: 'welcome',
-  aliases: [],
+  usage: ['welcome'],
+  use: 'on/off',
   category: 'group',
-  description: 'Turn the welcome message on or off',
-  usage: 'on/off',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ m, config, prefix, command, args, reply }) => {

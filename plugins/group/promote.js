@@ -1,8 +1,6 @@
 module.exports = {
-  name: 'promote',
-  aliases: [],
+  usage: ['promote'],
   category: 'group',
-  description: 'Make a member a group admin',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

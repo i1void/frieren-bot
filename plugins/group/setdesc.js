@@ -1,9 +1,7 @@
 module.exports = {
-  name: 'setdesc',
-  aliases: [],
+  usage: ['setdesc'],
+  use: 'teks',
   category: 'group',
-  description: 'Change the group description',
-  usage: '<teks>',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

@@ -1,9 +1,7 @@
 module.exports = {
-  name: 'tagall',
-  aliases: [],
+  usage: ['tagall'],
+  use: 'teks',
   category: 'group',
-  description: 'Mention every member',
-  usage: '<teks>',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ groupMetadata, text, reply }) => {

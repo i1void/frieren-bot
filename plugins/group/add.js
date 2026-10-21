@@ -1,9 +1,7 @@
 module.exports = {
-  name: 'add',
-  aliases: [],
+  usage: ['add'],
+  use: 'nomor',
   category: 'group',
-  description: 'Add a member by number',
-  usage: '<nomor>',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,
