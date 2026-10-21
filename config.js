@@ -10,6 +10,8 @@ global.mess = {
   limitHabis: 'Your limit is used up',
   banned: '[ System Access Failed ] you are banned by the owner',
   cooldown: '[ System Notice ] Slow down, wait a moment',
+  spamWarning: '[ System Notice ] Stop spamming commands, or you will be blocked for a while',
+  spamBlocked: '[ System Notice ] You are blocked for spamming commands, try again later',
 }
 
 module.exports = {
@@ -25,12 +27,22 @@ module.exports = {
   authorName: 'Void',
   prefixes: ['#', '.', '!', '/'],
   isPublic: true,
-  cooldown: 3, // seconds between commands per user (owner is exempt), 0 = off
+  // Anti-spam for commands (the owner is exempt). A command sent within `cooldown` seconds of the previous
+  // one is ignored; keep doing it and the user is warned (warnAt), then blocked for blockMinutes (blockAt).
+  antiSpam: { cooldown: 3, warnAt: 3, blockAt: 5, blockMinutes: 10 },
   apiBase: 'https://api.i1void.is-a.dev', // API used by the downloader plugins
   limit: {
     free: 15,
     premium: 10000,
   },
   timezone: 'Asia/Jakarta',
+  // YouTube downloads (ytmp3, ytmp4, play) go through yt-dlp, which must be installed on the server.
+  youtube: {
+    ytdlpPath: 'yt-dlp', // command name or full path of the yt-dlp binary
+    maxMinutes: 30, // longest video that is accepted
+    maxSizeMb: 60, // biggest file that is sent
+    maxVideoHeight: 720, // ytmp4 quality cap
+    maxConcurrent: 2, // downloads running at the same time
+  },
   messages: global.mess,
 }
