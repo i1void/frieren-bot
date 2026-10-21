@@ -12,17 +12,19 @@ module.exports = {
     let sent = 0 // media already delivered: no refund after that
     try {
       sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
+      const start = Date.now()
       const json = await fetchJson(`${config.apiBase}/downloader/tiktok?url=${encodeURIComponent(text)}`)
       if (!json?.status || !json.result) {
         refundLimit()
         return reply(config.messages.error)
       }
-      const { type, media, title } = json.result
+      const { type, media } = json.result
+      const caption = `🍟 *Fetching* : ${Date.now() - start} ms`
       if (type === 'image' && media.images?.length) {
         for (let i = 0; i < media.images.length; i++) {
           await sock.sendMessage(
             m.chat,
-            { image: { url: media.images[i] }, caption: `[Image ${i + 1}/${media.images.length}]` },
+            { image: { url: media.images[i] }, caption: `[Photo ${i + 1}]` },
             { quoted: m }
           )
           sent++
@@ -34,7 +36,7 @@ module.exports = {
           refundLimit()
           return reply('Video not found / invalid link.')
         }
-        await sock.sendMessage(m.chat, { video: { url: videoUrl }, caption: title || '' }, { quoted: m })
+        await sock.sendMessage(m.chat, { video: { url: videoUrl }, caption }, { quoted: m })
       }
     } catch (err) {
       console.error(err)
