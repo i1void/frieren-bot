@@ -1,5 +1,27 @@
-const upload = require('../../lib/uploadFile')
+const axios = require('axios')
+const FormData = require('form-data')
+const { fromBuffer } = require('file-type')
+const uploadTmpfiles = require('../../lib/uploadFile')
 const { fetchBuffer } = require('../../lib/http')
+
+// memegen downloads the background itself, so it needs a public link that serves the raw image.
+// catbox is tried first; tmpfiles (the bot's default uploader) is the fallback.
+async function uploadBackground(buffer) {
+  try {
+    const { ext, mime } = (await fromBuffer(buffer)) || {}
+    const form = new FormData()
+    form.append('reqtype', 'fileupload')
+    form.append('fileToUpload', buffer, { filename: `meme.${ext || 'jpg'}`, contentType: mime })
+    const { data } = await axios.post('https://catbox.moe/user/api.php', form, {
+      headers: form.getHeaders(),
+      timeout: 30000,
+    })
+    if (/^https?:\/\//.test(String(data).trim())) return String(data).trim()
+  } catch (err) {
+    console.error('catbox upload failed:', err.message)
+  }
+  return uploadTmpfiles(buffer)
+}
 
 // memegen.link text rules: space -> _, _ -> __, - -> --, and ~x codes for special characters.
 // An empty line must be "_".
@@ -31,10 +53,11 @@ module.exports = {
     try {
       await reply(config.messages.wait)
       const source = await sock.downloadMediaMessage(target)
-      const background = await upload(source) // memegen needs a public URL for the background
+      const background = await uploadBackground(source)
       const url =
         `https://api.memegen.link/images/custom/${encodeLine(top)}/${encodeLine(bottom)}.png` +
         `?background=${encodeURIComponent(background)}`
+      console.log('smeme background:', background)
       const meme = await fetchBuffer(url, { timeout: 30000 })
       await sock.sendImageAsSticker(m.chat, meme, m, { packname: config.packName, author: config.authorName })
     } catch (err) {
