@@ -43,7 +43,7 @@ function typoSuggestions(command, isOwner) {
   const names = []
   for (const p of listPlugins()) {
     if (isPluginDisabled(p, disabled) || (p.ownerOnly && !isOwner)) continue // no hints for commands the sender cannot use
-    names.push(p.name, ...p.aliases)
+    names.push(...p.commands)
   }
 
   const seen = new Set()
