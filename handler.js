@@ -116,9 +116,10 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
 
   const isGroup = m.chat.endsWith('@g.us')
   const groupMetadata = isGroup ? await sock.groupMetadata(m.chat).catch(() => null) : null
-  const groupAdmins = isGroup && groupMetadata ? getGroupAdmins(groupMetadata.participants) : []
-  const botNumber = sock.decodeJid(sock.user.id)
-  const isBotAdmin = isGroup ? groupAdmins.includes(botNumber) : false
+  const groupAdmins = isGroup && groupMetadata ? getGroupAdmins(groupMetadata.participants, sock.decodeJid) : []
+  // The bot can be listed by its phone-number JID or by its LID, depending on the group.
+  const botIds = [sock.user.id, sock.user.lid].filter(Boolean).map((jid) => sock.decodeJid(jid))
+  const isBotAdmin = isGroup ? botIds.some((id) => groupAdmins.includes(id)) : false
   const isAdmin = isGroup ? groupAdmins.includes(sender) : false
 
   const denied = checkPermission(plugin, { isOwner, isGroup, isAdmin, isBotAdmin })
