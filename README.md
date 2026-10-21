@@ -13,7 +13,6 @@
 - Group management (kick, promote, tagall, antilink, welcome message, etc)
 - Owner tools (ban, premium, limit, broadcast, enable/disable commands)
 - Plugin system: one file per command, menu is generated automatically
-- Event plugins: code that runs on every message (the antilink check is one)
 - Anti-spam for commands (warning, then a temporary block) and "Did you mean ...?" with a number reply
 
 ### # How To
