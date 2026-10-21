@@ -3,10 +3,10 @@ const path = require('path')
 
 const QRIS_PATH = path.join(__dirname, '..', '..', 'storage', 'media', 'image', 'qris.png')
 
-const CAPTION = `Scan Qris diatas menggunakan E-wallet ataupun Mbanking yang support Qris
+const CAPTION = `Support this bot ☕
+Scan the QRIS above with any QRIS-supported e-wallet or banking app.
 
-Donasi Via:
-- Trakteer: https://trakteer.id/nodt`
+Or donate via Trakteer: https://trakteer.id/nodt`
 
 module.exports = {
   usage: ['donate'],
