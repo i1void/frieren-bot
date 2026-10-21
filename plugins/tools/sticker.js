@@ -1,8 +1,7 @@
 module.exports = {
-  name: 'sticker',
-  aliases: ['s'],
+  usage: ['sticker'],
+  hidden: ['s'],
   category: 'tools',
-  description: 'Turn an image / short video into a sticker',
   execute: async ({ sock, m, config, prefix, reply }) => {
     const target = m.quoted && /image|video/.test(m.quoted.mtype) ? m.quoted : m
     const mime = (target.msg || target).mimetype || ''

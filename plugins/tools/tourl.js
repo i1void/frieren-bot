@@ -1,10 +1,8 @@
 const upload = require('../../lib/uploadFile')
 
 module.exports = {
-  name: 'tourl',
-  aliases: [],
+  usage: ['tourl'],
   category: 'tools',
-  description: 'Upload media and get a link',
   execute: async ({ sock, m, config, prefix, reply }) => {
     const target = m.quoted || m
     const mime = (target.msg || target).mimetype || ''

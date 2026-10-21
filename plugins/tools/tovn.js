@@ -1,10 +1,8 @@
 const { convertToOpus } = require('../../lib/convert')
 
 module.exports = {
-  name: 'tovn',
-  aliases: [],
+  usage: ['tovn'],
   category: 'tools',
-  description: 'Convert audio to voice note',
   execute: async ({ sock, m, config, prefix, reply }) => {
     if (!m.quoted || !/audio/.test(m.quoted.mtype)) return reply(`Reply to an audio with the caption ${prefix}tovn`)
     try {

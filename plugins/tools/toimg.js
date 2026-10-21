@@ -1,10 +1,8 @@
 const { convertWebpToPng, isAnimatedWebp } = require('../../lib/convert')
 
 module.exports = {
-  name: 'toimg',
-  aliases: [],
+  usage: ['toimg'],
   category: 'tools',
-  description: 'Turn a sticker into an image',
   execute: async ({ sock, m, config, prefix, reply }) => {
     if (!m.quoted || m.quoted.mtype !== 'stickerMessage') return reply(`Reply to a sticker with the caption ${prefix}toimg`)
     try {

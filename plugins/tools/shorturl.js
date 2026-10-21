@@ -1,11 +1,9 @@
 const { fetchText } = require('../../lib/http')
 
 module.exports = {
-  name: 'shorturl',
-  aliases: [],
+  usage: ['shorturl'],
+  use: 'link',
   category: 'tools',
-  description: 'Shorten a link',
-  usage: '<link>',
   execute: async ({ config, prefix, text, reply }) => {
     if (!text) return reply(`Example: ${prefix}shorturl https://example.com`)
     try {

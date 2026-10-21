@@ -6,10 +6,9 @@ const { listPlugins } = require('../../lib/pluginLoader')
 const { getDisabledPlugins } = require('../../lib/settings')
 
 module.exports = {
-  name: 'botstat',
-  aliases: ['botstatus', 'stat'],
+  usage: ['botstat'],
+  hidden: ['botstatus', 'stat'],
   category: 'tools',
-  description: 'Show bot statistics',
   execute: async ({ sock, reply }) => {
     const groups = await sock
       .groupFetchAllParticipating()

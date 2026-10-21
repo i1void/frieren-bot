@@ -1,10 +1,8 @@
 const { runtime } = require('../../lib/myfunc')
 
 module.exports = {
-  name: 'ping',
-  aliases: [],
+  usage: ['ping'],
   category: 'tools',
-  description: 'Check latency and uptime',
   execute: async ({ sock, m, reply }) => {
     const start = Date.now()
     await reply('Pinging...')

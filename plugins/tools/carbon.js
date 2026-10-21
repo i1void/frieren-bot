@@ -1,11 +1,9 @@
 const { fetchJson } = require('../../lib/http')
 
 module.exports = {
-  name: 'carbon',
-  aliases: [],
+  usage: ['carbon'],
+  use: 'code',
   category: 'tools',
-  description: 'Turn code into an image',
-  usage: '<code>',
   execute: async ({ sock, m, config, prefix, text, reply }) => {
     if (!text) return reply(`Example: ${prefix}carbon console.log("hello")`)
     try {
