@@ -85,15 +85,15 @@ The owner `restart` command only works properly under a process manager like thi
 Create `plugins/<category>/<name>.js` (copy `plugins/_template.js`) and restart the bot.
 It appears in the menu by itself, even inside a brand new category folder.
 
-The menu builds itself from the plugins: the section is the `category`, the line is `name usage`, sorted A-Z. `hidden: true` keeps a command out of the menu, and commands switched off with the `plugin` command disappear from it too.
+The menu builds itself from the plugins: the section is the `category`, each name in `usage` becomes a line `name use`, sorted A-Z. Names in `hidden` work as commands but are not listed. Commands switched off with the `plugin` command disappear from the menu too. If every name is in `hidden` (use `usage: []`), the plugin is not in the menu at all.
 
 ```js
 module.exports = {
-  name: 'hello',
-  aliases: ['hi'],
+  usage: ['hello', 'hi'], // command names, listed in the menu
+  hidden: ['halo'], // optional: work, but not listed
+  use: 'name', // optional: argument hint in the menu
   category: 'tools', // menu section
-  usage: '<name>', // shown in the menu
-  // optional: ownerOnly, groupOnly, adminOnly, botAdmin, hidden
+  // optional: ownerOnly, groupOnly, adminOnly, botAdmin, limit
   execute: async ({ reply, text }) => reply(`Hello ${text}`),
 }
 ```
