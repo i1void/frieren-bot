@@ -1,10 +1,8 @@
 const { getPremium, setPremium } = require('../../lib/access')
 
 module.exports = {
-  name: 'addprem',
-  aliases: [],
+  usage: ['addprem'],
   category: 'owner',
-  description: 'Give a user premium',
   ownerOnly: true,
   execute: async ({ mentionedJid, reply }) => {
     if (!mentionedJid.length) return reply(`Tag/reply the user you want to make premium.`)

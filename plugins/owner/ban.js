@@ -1,10 +1,8 @@
 const { getBanned, setBanned } = require('../../lib/access')
 
 module.exports = {
-  name: 'ban',
-  aliases: [],
+  usage: ['ban'],
   category: 'owner',
-  description: 'Ban a user from using the bot',
   ownerOnly: true,
   execute: async ({ mentionedJid, reply }) => {
     if (!mentionedJid.length) return reply(`Tag/reply the user you want to ban.`)

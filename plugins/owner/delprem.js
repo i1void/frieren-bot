@@ -1,10 +1,8 @@
 const { getPremium, setPremium } = require('../../lib/access')
 
 module.exports = {
-  name: 'delprem',
-  aliases: [],
+  usage: ['delprem'],
   category: 'owner',
-  description: 'Remove premium from a user',
   ownerOnly: true,
   execute: async ({ mentionedJid, reply }) => {
     if (!mentionedJid.length) return reply(`Tag/reply the user you want to remove from premium.`)

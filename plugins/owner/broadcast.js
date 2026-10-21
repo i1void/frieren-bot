@@ -1,9 +1,8 @@
 module.exports = {
-  name: 'broadcast',
-  aliases: ['bc'],
+  usage: ['broadcast'],
+  hidden: ['bc'],
+  use: 'teks',
   category: 'owner',
-  description: 'Send a message to every group',
-  usage: '<teks>',
   ownerOnly: true,
   execute: async ({ sock, config, prefix, text, reply, sleep }) => {
     if (!text) return reply(`Example: ${prefix}broadcast Announcement...`)

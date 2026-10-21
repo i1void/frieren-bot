@@ -1,10 +1,8 @@
 const { getPremium } = require('../../lib/access')
 
 module.exports = {
-  name: 'listprem',
-  aliases: [],
+  usage: ['listprem'],
   category: 'owner',
-  description: 'List premium users',
   ownerOnly: true,
   execute: async ({ reply }) => {
     const list = getPremium()

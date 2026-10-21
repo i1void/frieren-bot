@@ -1,10 +1,8 @@
 const { getBanned, setBanned } = require('../../lib/access')
 
 module.exports = {
-  name: 'unban',
-  aliases: [],
+  usage: ['unban'],
   category: 'owner',
-  description: 'Unban a user',
   ownerOnly: true,
   execute: async ({ mentionedJid, reply }) => {
     if (!mentionedJid.length) return reply(`Tag/reply the user you want to unban.`)

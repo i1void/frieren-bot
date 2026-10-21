@@ -1,10 +1,8 @@
 const { addLimit } = require('../../lib/db')
 
 module.exports = {
-  name: 'addlimit',
-  aliases: [],
+  usage: ['addlimit'],
   category: 'owner',
-  description: 'Add limit to a user',
   ownerOnly: true,
   execute: async ({ config, prefix, args, mentionedJid, reply }) => {
     if (!mentionedJid.length || !args[args.length - 1]?.match(/^\d+$/))
