@@ -1,0 +1,15 @@
+module.exports = {
+  name: 'setdesc',
+  aliases: [],
+  category: 'group',
+  description: 'Change the group description',
+  usage: '<teks>',
+  groupOnly: true,
+  adminOnly: true,
+  botAdmin: true,
+  execute: async ({ sock, m, config, prefix, text, reply }) => {
+    if (!text) return reply(`Example: ${prefix}setdesc New group description`)
+    await sock.groupUpdateDescription(m.chat, text)
+    reply(config.messages.done)
+  },
+}
