@@ -7,7 +7,7 @@
 
 ### # Features
 
-- Downloader (YouTube, TikTok, Instagram, Facebook)
+- Downloader (TikTok, Instagram, Facebook)
 - Sticker maker + converter (image/video to sticker, sticker to image)
 - Media converter (to mp3, to voice note)
 - Group management (kick, promote, tagall, antilink, welcome message, etc)
@@ -40,17 +40,6 @@ On first run, enter your WhatsApp number when prompted, then input the pairing c
 Everything (users and limits, premium, bans, welcome texts, antilink, disabled commands) lives in one SQLite file: `storage/database/bot.db`. While the bot runs, `bot.db-wal` and `bot.db-shm` appear next to it. To back up, stop the bot and copy all three.
 
 Upgrading from the old JSON files: just start the bot. They are imported once and the originals are moved to `storage/database/json-backup/`.
-
-### # YouTube downloads (yt-dlp)
-
-`ytmp3`, `ytmp4` and `play` use [yt-dlp](https://github.com/yt-dlp/yt-dlp). It is not an npm package, so install it on the server once:
-
-```
-pip install -U "yt-dlp[default]"   # or download the standalone binary from the yt-dlp releases page
-yt-dlp --version
-```
-
-YouTube changes its site often. If downloads suddenly fail, update first (`yt-dlp -U` or `pip install -U "yt-dlp[default]"`): most breakages are fixed upstream within days. The bot lets yt-dlp use the Node.js it runs on as the JavaScript runtime YouTube needs, and FFmpeg comes from the bundled package. Length, size, quality and parallel-download limits are under `youtube` in `config.js`.
 
 ### # Config
 
