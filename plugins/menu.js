@@ -8,11 +8,9 @@ const FIRST = ['downloader', 'tools']
 const LAST = ['group', 'owner']
 
 module.exports = {
-  name: 'menu',
-  aliases: ['help'],
+  usage: [],
+  hidden: ['menu', 'help'],
   category: 'tools',
-  description: 'Show the command list',
-  hidden: true,
   execute: async ({ sock, config, prefix, reply, isOwner, isPremium }) => {
     const disabled = getDisabledPlugins()
     const ownerNumber = config.owner[0].replace(/\D/g, '')
@@ -21,8 +19,8 @@ module.exports = {
 
     const sections = {}
     for (const plugin of listPlugins()) {
-      if (plugin.hidden || isPluginDisabled(plugin, disabled)) continue
-      ;(sections[plugin.category] ??= []).push(`${plugin.name}${plugin.usage ? ' ' + plugin.usage : ''}`)
+      if (!plugin.usage.length || isPluginDisabled(plugin, disabled)) continue
+      for (const name of plugin.usage) (sections[plugin.category] ??= []).push(`${name}${plugin.use ? ' ' + plugin.use : ''}`)
     }
 
     const others = Object.keys(sections).filter((c) => !FIRST.includes(c) && !LAST.includes(c)).sort()
