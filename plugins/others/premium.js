@@ -1,6 +1,6 @@
 const { listPremium, formatExpiry } = require('../../lib/access')
 
-// Price list shown to users. Edit here. 
+// Price list shown to users. Edit here.
 const PLANS = ['7 hari - Rp 5.000', '30 hari - Rp 15.000']
 const PAYMENT = 'QRIS / DANA'
 
@@ -19,16 +19,17 @@ module.exports = {
       [
         '━──「 *PREMIUM* 」──━',
         '',
-        '✨ *Perks*',
-        '𖦹 unlimited command limit',
-        '𖦹 use the bot in private chat even when group mode is on',
+        '*Perks*',
+        '𖦹 Unlimited limit',
+        '𖦹 Private chat access (when group mode is on)',
         '',
-        '💵 *Plans*',
+        '*Plans*',
         ...PLANS.map((plan) => `𖦹 ${plan}`),
         '',
-        `💳 *Payment* : ${PAYMENT}`,
+        '*Payment*',
+        `𖦹 ${PAYMENT}`,
         '',
-        `Contact the owner with *${prefix}owner* to upgrade.`,
+        `To upgrade, contact the owner: *${prefix}owner*`,
       ].join('\n')
     )
   },
