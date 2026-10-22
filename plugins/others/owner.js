@@ -1,6 +1,6 @@
 module.exports = {
   usage: ['owner'],
-  category: 'tools',
+  category: 'others',
   execute: async ({ sock, m, config }) => {
     const numbers = config.owner.map((v) => v.replace(/\D/g, '')).filter(Boolean)
     const contacts = numbers.map((number, i) => {
