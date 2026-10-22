@@ -8,8 +8,8 @@ module.exports = {
 
     const resetNote = `Your limit resets every day at 00:00 (${getTimezone(config)}).`
     if (user.limit < 1) {
-      return reply(`❌ Your limit has run out.\n${resetNote}\n\nNeed more? Contact the owner with *${prefix}owner*.`)
+      return reply(`❌ Your limit has run out.\n${resetNote}\n\nNeed more? Send *${prefix}premium* to upgrade.`)
     }
-    reply(`🍟 Your limit : *${user.limit}*\n${resetNote}\n\nNeed more? Contact the owner with *${prefix}owner*.`)
+    reply(`🍟 Your limit : *${user.limit}*\n${resetNote}\n\nNeed more? Send *${prefix}premium* to upgrade.`)
   },
 }
