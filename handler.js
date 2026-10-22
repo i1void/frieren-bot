@@ -9,7 +9,7 @@ const { getDisabledPlugins, isPluginDisabled } = require('./lib/settings')
 const { suggestCommands } = require('./lib/suggest')
 const { getPlugin, listPlugins, listEvents } = require('./lib/pluginLoader')
 const { createAntiSpam } = require('./lib/antispam')
-const { isMuted } = require('./lib/mute')
+const { isMuted } = require('./lib/group')
 
 const antiSpam = createAntiSpam(config.antiSpam)
 const PHONE_ARG = /^@?\+?\d[\d-]{7,}$/
