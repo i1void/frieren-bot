@@ -43,7 +43,7 @@ async function addMember({ sock, m, config, prefix, text, reply }) {
 
 module.exports = {
   usage: ['add', 'kick', 'promote', 'demote'],
-  use: 'mention / reply / nomor',
+  use: { add: 'nomor', kick: '@tag or reply', promote: '@tag or reply', demote: '@tag or reply' },
   category: 'group',
   groupOnly: true,
   adminOnly: true,
