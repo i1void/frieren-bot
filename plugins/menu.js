@@ -1,6 +1,6 @@
 const { runtime } = require('../lib/myfunc')
 const { listPlugins } = require('../lib/pluginLoader')
-const { getDisabledPlugins, isPluginDisabled } = require('../lib/settings')
+const { getDisabledPlugins, getDisabledCommands, isPluginDisabled } = require('../lib/settings')
 const { version } = require('../package.json')
 
 // Sections are plugin categories. These two come first, these two last, any other one in between.
@@ -13,6 +13,7 @@ module.exports = {
   category: 'tools',
   execute: async ({ sock, config, prefix, reply, isOwner, isPremium }) => {
     const disabled = getDisabledPlugins()
+    const offCommands = getDisabledCommands()
     const ownerNumber = config.owner[0].replace(/\D/g, '')
     const statusUser = isOwner ? 'Owner 🎴' : isPremium ? 'Premium 💎' : 'Free 😺'
     const botMode = sock.public ? 'public' : 'self'
@@ -20,7 +21,7 @@ module.exports = {
     const sections = {}
     for (const plugin of listPlugins()) {
       if (!plugin.usage.length || isPluginDisabled(plugin, disabled)) continue
-      for (const name of plugin.usage) (sections[plugin.category] ??= []).push(`${name}${plugin.use ? ' ' + plugin.use : ''}`)
+      for (const name of plugin.usage.filter((n) => !offCommands.includes(n))) (sections[plugin.category] ??= []).push(`${name}${plugin.use ? ' ' + plugin.use : ''}`)
     }
 
     const others = Object.keys(sections).filter((c) => !FIRST.includes(c) && !LAST.includes(c)).sort()
