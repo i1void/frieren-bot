@@ -9,6 +9,7 @@ const { getDisabledPlugins, isPluginDisabled } = require('./lib/settings')
 const { suggestCommands } = require('./lib/suggest')
 const { getPlugin, listPlugins, listEvents } = require('./lib/pluginLoader')
 const { createAntiSpam } = require('./lib/antispam')
+const { isMuted } = require('./lib/mute')
 
 const antiSpam = createAntiSpam(config.antiSpam)
 const PHONE_ARG = /^@?\+?\d[\d-]{7,}$/
@@ -89,6 +90,10 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   const isOwner = config.owner.map((v) => v.replace(/\D/g, '')).includes(senderNumber)
 
   if (isBanned(sender) && !isOwner) return
+
+  // A muted group gets no replies at all, except mute and gc so it can always be undone.
+  // Event plugins (anti_link etc.) are not affected: they run before this point.
+  if (m.chat.endsWith('@g.us') && isMuted(m.chat) && !['mute', 'gc'].includes(getPlugin(command)?.name)) return
 
   const reply = (teks, opts = {}) => sock.sendMessage(m.chat, { text: teks, ...opts }, { quoted: m })
 

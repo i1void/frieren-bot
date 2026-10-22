@@ -15,6 +15,7 @@ const config = require('./config')
 const { smsg, logMessage } = require('./lib/myfunc')
 const { welcomeHandler } = require('./lib/welcome')
 const { loadPlugins } = require('./lib/pluginLoader')
+const { startRentWatcher } = require('./lib/groupRent')
 const { downloadMedia, imageToSticker, videoToSticker } = require('./lib/media')
 
 const store = { contacts: {} }
@@ -210,6 +211,7 @@ async function connectToWhatsApp() {
       clearConsole()
       showBanner()
       console.log(chalk.green(`${config.botName} connected ✔`))
+      startRentWatcher(sock)
     }
   })
 
