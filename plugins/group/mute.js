@@ -1,4 +1,4 @@
-const { isMuted, setMuted } = require('../../lib/mute')
+const { isMuted, setMuted } = require('../../lib/group')
 
 module.exports = {
   usage: ['mute'],
