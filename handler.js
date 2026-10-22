@@ -5,7 +5,7 @@ const config = require('./config')
 const { sleep, getGroupAdmins } = require('./lib/myfunc')
 const { getUser, spendLimit, restoreLimit, getTimezone } = require('./lib/db')
 const { isBanned, hasPremium } = require('./lib/access')
-const { getDisabledPlugins, isPluginDisabled } = require('./lib/settings')
+const { getDisabledPlugins, getDisabledCommands, isPluginDisabled, isGroupMode } = require('./lib/settings')
 const { suggestCommands } = require('./lib/suggest')
 const { getPlugin, listPlugins, listEvents } = require('./lib/pluginLoader')
 const { createAntiSpam } = require('./lib/antispam')
@@ -41,10 +41,11 @@ function parseCommand(body) {
 // Enabled commands that are close to a mistyped one, best first.
 function typoSuggestions(command, isOwner) {
   const disabled = getDisabledPlugins()
+  const offCommands = getDisabledCommands()
   const names = []
   for (const p of listPlugins()) {
     if (isPluginDisabled(p, disabled) || (p.ownerOnly && !isOwner)) continue // no hints for commands the sender cannot use
-    names.push(...p.commands)
+    names.push(...p.commands.filter((c) => !offCommands.includes(c)))
   }
 
   const seen = new Set()
@@ -106,7 +107,7 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
     }
     return
   }
-  if (isPluginDisabled(plugin)) {
+  if (isPluginDisabled(plugin) || getDisabledCommands().includes(command)) {
     return reply('[ System Notice ] This command is disabled by the owner')
   }
 
@@ -116,6 +117,12 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   }
 
   const isPremium = isOwner || hasPremium(sender)
+
+  // Group mode: private chat is for premium users and the owner. .premium and .owner stay open to everyone.
+  if (!m.chat.endsWith('@g.us') && isGroupMode() && !isPremium && !['premium', 'owner'].includes(plugin.name)) {
+    return reply(`⚠️ The bot only works in groups right now. Private chat is for premium users.\nSend *${prefix}premium* to see how to upgrade.`)
+  }
+
   const user = getUser(sender, config)
   if (isPremium) user.premium = true
 
