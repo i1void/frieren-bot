@@ -7,7 +7,6 @@ const UNIT_IN_DAYS = { d: 1, h: 1 / 24, m: 1 / 1440 }
 module.exports = {
   usage: ['+prem', '-prem', 'ban', 'unban'],
   hidden: ['addprem', 'delprem'],
-  use: 'mention or reply',
   category: 'owner',
   ownerOnly: true,
   execute: async ({ config, prefix, command, args, mentionedJid, reply }) => {
