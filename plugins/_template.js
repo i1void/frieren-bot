@@ -4,7 +4,7 @@
 module.exports = {
   usage: ['example'], // command names listed in the menu (the first one is the main name)
   hidden: [], // command names that work but are not listed in the menu
-  use: 'text', // argument hint shown in the menu after each name
+  use: 'text', // argument hint shown in the menu after each name (or { example: 'text', other: 'link' } to give each command its own)
   category: 'tools', // menu section: downloader | tools | group | owner (or any new name)
   ownerOnly: false, // only config.owner
   groupOnly: false, // group chat only
