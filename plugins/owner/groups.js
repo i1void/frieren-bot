@@ -1,5 +1,4 @@
-const { listGroups } = require('../../lib/groups')
-const { isMuted } = require('../../lib/mute')
+const { listGroups, isMuted } = require('../../lib/group')
 
 module.exports = {
   usage: ['groups'],

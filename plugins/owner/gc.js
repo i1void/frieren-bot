@@ -1,6 +1,4 @@
-const { listGroups } = require('../../lib/groups')
-const { isMuted, setMuted } = require('../../lib/mute')
-const { getRent, addDays, setForever, resetRent, forgetGroup, formatLeft } = require('../../lib/groupRent')
+const { listGroups, isMuted, setMuted, getRent, addDays, setForever, resetRent, forgetGroup, formatLeft } = require('../../lib/group')
 const { getGroupAdmins } = require('../../lib/myfunc')
 
 // Owner tool to manage another group by its number from .groups.
