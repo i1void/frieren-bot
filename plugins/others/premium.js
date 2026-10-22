@@ -1,6 +1,6 @@
 const { listPremium, formatExpiry } = require('../../lib/access')
 
-// Price list shown to users. Edit here.
+// Price list shown to users. Edit here. 
 const PLANS = ['7 hari - Rp 5.000', '30 hari - Rp 15.000']
 const PAYMENT = 'QRIS / DANA'
 
