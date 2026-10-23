@@ -1,5 +1,5 @@
 // PM2 config: `pm2 start ecosystem.config.js`. The owner "restart" command relies on this
-// (or any process manager) to bring the bot back after it exits. 
+// (or any process manager) to bring the bot back after it exits.
 module.exports = {
   apps: [
     {
