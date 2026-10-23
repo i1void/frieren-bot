@@ -13,6 +13,7 @@
 - Group management (kick, promote, tagall, antilink, welcome message, etc)
 - Owner tools (ban, premium, limit, broadcast, enable/disable commands)
 - Plugin system: one file per command, menu is generated automatically
+- Menfess: anonymous two-way messages through the bot (`.menfess 08123456789 | message`), with opt-out, daily caps and an owner log (`.menfesslog`)
 - Anti-spam for commands (warning, then a temporary block) and "Did you mean ...?" with a number reply
 
 ### # How To
@@ -115,6 +116,7 @@ module.exports = {
 
 - `.plugin` — list commands, `.plugin off <cmd>` / `.plugin on <cmd>` to disable / enable one
 - `.botstatus` — uptime, memory, groups, users, command count
+- `.menfesslog <code>` — see who sent a menfess (abuse handling)
 - `.ban` `.unban` `.addprem` `.delprem` `.listprem` `.addlimit` `.broadcast` `.join` `.setbio` `.restart`
 
 ### # Deploy
