@@ -36,5 +36,7 @@ module.exports = {
     premium: 10000,
   },
   timezone: 'Asia/Jakarta',
+  // Optional: a number starting with 0 (e.g. 0812...) gets this country code (62812...). Remove the line to require full international numbers.
+  countryCode: '62',
   messages: global.mess,
 }
