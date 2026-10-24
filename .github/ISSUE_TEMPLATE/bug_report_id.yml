@@ -1,0 +1,96 @@
+name: Laporan bug - Indonesia
+description: Ada fitur yang tidak berjalan seperti seharusnya
+title: '[Bug] '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih sudah melapor. Isi sebanyak yang kamu bisa.
+        **Jangan pernah menempel folder `session/`, file database, atau nomor telepon lengkap.**
+  - type: textarea
+    id: description
+    attributes:
+      label: Apa yang terjadi?
+      description: Jelaskan masalahnya dan apa yang kamu harapkan.
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Perintah
+      description: Perintah yang kamu pakai, persis seperti yang kamu kirim.
+      placeholder: .menfess 628123456789 | halo
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Langkah untuk mengulang
+      placeholder: |
+        1. Kirim ...
+        2. Lalu ...
+        3. Hasilnya ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log konsol / error
+      description: Output dari konsol atau `pm2 logs frieren-bot`. Hapus data pribadi dulu.
+      render: shell
+  - type: input
+    id: baileys
+    attributes:
+      label: Versi Baileys
+      description: Versi yang ada di `package.json` kamu.
+      placeholder: 6.7.24
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Versi Node.js
+      description: Hasil dari `node -v` (wajib 22.13 atau lebih baru).
+      placeholder: v22.13.0
+    validations:
+      required: true
+  - type: dropdown
+    id: runner
+    attributes:
+      label: Bot dijalankan dengan apa?
+      options:
+        - PM2
+        - npm start
+        - Lainnya
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Sistem operasi
+      placeholder: Ubuntu 24.04, Termux, Windows 11, ...
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Terjadi di mana?
+      options:
+        - Chat pribadi
+        - Grup
+        - Keduanya
+        - Tidak tahu
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Daftar periksa
+      options:
+        - label: Saya memakai versi bot terbaru.
+          required: true
+        - label: Saya sudah membaca README dan tidak menemukan jawabannya.
+          required: true
+        - label: Saya sudah mencari issue yang ada dan ini bukan duplikat.
+          required: true
+        - label: Saya sudah memeriksa issue Baileys dan masalahnya bukan dari Baileys.
+          required: true
+        - label: Saya sudah memberi informasi yang cukup. Jika laporan saya tidak jelas, tidak masalah bila tidak direspons.
+          required: true
