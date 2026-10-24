@@ -31,6 +31,9 @@ module.exports = {
   // one is ignored; keep doing it and the user is warned (warnAt), then blocked for blockMinutes (blockAt).
   antiSpam: { cooldown: 3, warnAt: 3, blockAt: 5, blockMinutes: 10 },
   apiBase: 'https://api.i1void.is-a.dev', // API used by the downloader plugins
+  // WhatsApp Channel that .sendtext / .sendmedia post to. The bot number must be the owner/admin of the channel.
+  // Format: 120363xxxxxxxxxx@newsletter (the "@newsletter" part is optional). Leave empty to turn the feature off.
+  channelJid: '',
   limit: {
     free: 15,
     premium: 10000,
