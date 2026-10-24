@@ -2,4 +2,4 @@ blank_issues_enabled: false
 contact_links:
   - name: Have you checked the Baileys issues?
     url: https://github.com/WhiskeySockets/Baileys/issues
-    about: Search the open and closed issues first, to make sure the problem is not from Baileys itself (connection, pairing, sending messages).
+    about: Check the open and closed issues to see if the bug comes from Baileys.
