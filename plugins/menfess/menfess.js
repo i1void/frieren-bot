@@ -1,4 +1,4 @@
-const { digits, createSession, sentToday, addRoute, isOptedOut, optOut, optIn } = require('../../lib/menfess')
+const { quoteBlock, digits, createSession, sentToday, addRoute, isOptedOut, optOut, optIn } = require('../../lib/menfess')
 
 const MAX_LENGTH = 1000
 const MAX_PER_TARGET_PER_DAY = 3
@@ -77,9 +77,9 @@ module.exports = {
       const code = createSession(m.sender, found.jid, alias)
       const sent = await sock.sendMessage(found.jid, {
         text:
-          `💌 *MENFESS* #${code}\nFrom: *${alias}*\n\n${message}\n\n` +
-          `_Sent through the bot, the sender's identity is hidden. Reply to this message to answer._\n` +
-          `_Do not want these? Send ${prefix}menfess off_`,
+          `💌 *MENFESS* #${code}\nFrom: *${alias}*\n\n${quoteBlock(message)}\n\n` +
+          `_Reply to this message to answer._\n` +
+          `_Stop receiving: ${prefix}menfess off_`,
       })
       // A reply to that message goes back to the sender's chat.
       addRoute(sent?.key?.id, code, m.chat, true)
