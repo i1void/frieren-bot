@@ -3,10 +3,6 @@ const { listPlugins } = require('../lib/pluginLoader')
 const { getDisabledPlugins, getDisabledCommands, isPluginDisabled } = require('../lib/settings')
 const { version } = require('../package.json')
 
-// Sections are plugin categories. These two come first, these two last, any other one in between.
-const FIRST = ['downloader', 'tools']
-const LAST = ['group', 'owner']
-
 module.exports = {
   usage: [],
   hidden: ['menu', 'help'],
@@ -21,12 +17,16 @@ module.exports = {
     const sections = {}
     for (const plugin of listPlugins()) {
       if (!plugin.usage.length || isPluginDisabled(plugin, disabled)) continue
-      for (const name of plugin.usage.filter((n) => !offCommands.includes(n))) (sections[plugin.category] ??= []).push(`${name}${plugin.use ? ' ' + plugin.use : ''}`)
+      for (const name of plugin.usage.filter((n) => !offCommands.includes(n))) {
+        // "use" is either one string for every command, or an object { command: 'hint' }
+        const hint = typeof plugin.use === 'object' && plugin.use !== null ? plugin.use[name] : plugin.use
+        ;(sections[plugin.category] ??= []).push(`${name}${hint ? ' ' + hint : ''}`)
+      }
     }
 
-    const others = Object.keys(sections).filter((c) => !FIRST.includes(c) && !LAST.includes(c)).sort()
-    const body = [...FIRST, ...others, ...LAST]
-      .filter((category) => sections[category])
+    // Sections are plugin categories, sorted A-Z.
+    const body = Object.keys(sections)
+      .sort()
       .flatMap((category) => ['', `⌗ *${category.toUpperCase()}*`, ...sections[category].sort().map((line) => `- ${prefix}${line}`)])
 
     const text = [
