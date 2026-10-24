@@ -78,11 +78,11 @@ module.exports = {
       const sent = await sock.sendMessage(found.jid, {
         text:
           `💌 *MENFESS* #${code}\nFrom: *${alias}*\n\n${quoteBlock(message)}\n\n` +
-          `_Reply to this message to answer._\n` +
+          `_Send a message to answer, or reply to this one._\n` +
           `_Stop receiving: ${prefix}menfess off_`,
       })
       // A reply to that message goes back to the sender's chat.
-      addRoute(sent?.key?.id, code, m.chat, true)
+      addRoute(sent?.key?.id, code, m.chat, true, found.jid)
       await reply(`✅ Menfess #${code} sent. When they reply, it shows up here.`)
     } catch (err) {
       console.error('[menfess]', err)
