@@ -57,7 +57,7 @@ Optional keys:
 
 - `index.js` — WhatsApp connection
 - `handler.js` — command router
-- `plugins/` — one file per command (`plugins/events/` holds event plugins)
+- `plugins/` — one file per command (`plugins/_events/` holds event plugins)
 - `lib/` — helper functions
 - `storage/` — database & media
 
@@ -96,7 +96,7 @@ A broken plugin or a duplicate command name is skipped and reported in the conso
 
 ### # Event plugins
 
-An event plugin runs on every message, not on a command. Put it in `plugins/events/` with `event: true`. Return `true` when the message is handled, and nothing else runs for it (see `plugins/events/anti_link.js`).
+An event plugin runs on every message, not on a command. Put it in `plugins/_events/` with `event: true`. Return `true` when the message is handled, and nothing else runs for it (see `plugins/_events/anti_link.js`).
 
 ```js
 module.exports = {
