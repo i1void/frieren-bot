@@ -1,4 +1,4 @@
-const { getRoute, addRoute } = require('../../lib/menfess')
+const { quoteBlock, getRoute, addRoute } = require('../../lib/menfess')
 const { isBanned } = require('../../lib/access')
 
 const MEDIA = ['imageMessage', 'videoMessage', 'audioMessage', 'stickerMessage']
@@ -28,8 +28,8 @@ module.exports = {
 
     // route.toTarget: the message being answered was delivered to the receiver, so this person IS the receiver.
     const header = route.toTarget
-      ? `💬 *MENFESS* #${route.code}\nReply from the receiver:`
-      : `💬 *MENFESS* #${route.code}\nMessage from the sender:`
+      ? `💬 *MENFESS* #${route.code}\nReply from: *Receiver*`
+      : `💬 *MENFESS* #${route.code}\nReply from: *Sender*`
     const footer = '\n\n_Reply to this message to answer._'
 
     try {
@@ -38,7 +38,7 @@ module.exports = {
         const buffer = await m.download()
         const key = MEDIA_KEY[m.mtype]
         if (key === 'image' || key === 'video') {
-          delivered.push(await sock.sendMessage(route.forwardTo, { [key]: buffer, caption: `${header}${text ? `\n\n${text}` : ''}${footer}` }))
+          delivered.push(await sock.sendMessage(route.forwardTo, { [key]: buffer, caption: `${header}${text ? `\n\n${quoteBlock(text)}` : ''}${footer}` }))
         } else {
           // Audio and stickers cannot carry a caption: header first, then the media.
           delivered.push(await sock.sendMessage(route.forwardTo, { text: `${header}${footer}` }))
@@ -47,7 +47,7 @@ module.exports = {
           )
         }
       } else {
-        delivered.push(await sock.sendMessage(route.forwardTo, { text: `${header}\n\n${text}${footer}` }))
+        delivered.push(await sock.sendMessage(route.forwardTo, { text: `${header}\n\n${quoteBlock(text)}${footer}` }))
       }
 
       // Replying to what was just delivered goes back to this person: the direction flips.
