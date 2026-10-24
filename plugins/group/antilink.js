@@ -1,23 +1,21 @@
-const { readAntiLinkSettings, writeAntiLinkSettings } = require('../../lib/antilink')
+// Which groups have antilink switched on (the check itself is in plugins/_events/anti_link.js).
+const { db, transaction } = require('./database')
 
-module.exports = {
-  usage: ['antilink'],
-  use: 'on/off',
-  category: 'group',
-  groupOnly: true,
-  adminOnly: true,
-  execute: async ({ m, prefix, args, reply }) => {
-    const mode = args[0]?.toLowerCase()
-    const list = readAntiLinkSettings()
-    if (mode === 'on') {
-      if (!list.includes(m.chat)) list.push(m.chat)
-      writeAntiLinkSettings(list)
-      reply('✅ Antilink enabled in this group.')
-    } else if (mode === 'off') {
-      writeAntiLinkSettings(list.filter((v) => v !== m.chat))
-      reply('✅ Antilink disabled in this group.')
-    } else {
-      reply(`Example: ${prefix}antilink on / ${prefix}antilink off`)
-    }
-  },
+const listAll = db.prepare('SELECT chat FROM antilink ORDER BY rowid')
+const find = db.prepare('SELECT 1 FROM antilink WHERE chat = ?')
+const clear = db.prepare('DELETE FROM antilink')
+const add = db.prepare('INSERT OR IGNORE INTO antilink (chat) VALUES (?)')
+
+// Chat ids that have antilink switched on.
+const readAntiLinkSettings = () => listAll.all().map((row) => row.chat)
+
+const isAntiLinkEnabled = (chat) => find.get(chat) !== undefined
+
+function writeAntiLinkSettings(chats) {
+  transaction(() => {
+    clear.run()
+    for (const chat of chats) add.run(chat)
+  })
 }
+
+module.exports = { readAntiLinkSettings, writeAntiLinkSettings, isAntiLinkEnabled }
