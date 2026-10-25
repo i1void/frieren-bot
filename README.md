@@ -1,20 +1,19 @@
-## FRIEREN BOT (Base)
+## FRIEREN-BOT (Base)
 
-> Base WhatsApp bot built with Baileys.
+> Frieren-Bot is an open source Base WhatsApp bot built with Baileys.
 > ⭐ Don't forget to star this repo if you find it useful!
 
 [![GitHub stars](https://img.shields.io/github/stars/i1void/frieren-bot?style=flat-square&color=ff5e5b)](https://github.com/i1void/frieren-bot/stargazers) [![GitHub forks](https://img.shields.io/github/forks/i1void/frieren-bot?style=flat-square)](https://github.com/i1void/frieren-bot/network/members) [![License](https://img.shields.io/github/license/i1void/frieren-bot?style=flat-square)](https://github.com/i1void/frieren-bot/blob/main/LICENSE)
 
 ### # Features
 
-- Downloader (TikTok, Instagram, Facebook)
-- Sticker maker + converter (image/video to sticker, sticker to image), `brat`, `qc` (quote sticker), `emojimix`, `tts`
+- Downloader 
+- Sticker maker + converter
 - Media converter (to mp3, to voice note)
-- Utilities: `translate`, `ocr`, `tourl`, `shorturl`
 - Group management (kick, promote, tagall, antilink, welcome message, etc)
 - Owner tools (ban, premium, limit, broadcast, enable/disable commands, database `backup` / `restore`)
 - Plugin system: one file per command, menu is generated automatically
-- Menfess: anonymous two-way messages through the bot (`.menfess 08123456789 | message`), with opt-out, daily caps and an owner log (`.menfesslog`)
+- Menfess: anonymous two-way messages through the bot
 - Anti-spam for commands (warning, then a temporary block) and "Did you mean ...?" with a number reply
 
 ### # How To
