@@ -1,7 +1,7 @@
 const axios = require('axios')
 const FormData = require('form-data')
 const { fromBuffer } = require('file-type')
-const uploadTmpfiles = require('../../lib/uploadFile')
+const uploadHosting = require('../../lib/uploadFile')
 const { fetchBuffer } = require('../../lib/http')
 
 // memegen downloads the background itself, so it needs a public link that serves the raw image.
@@ -24,7 +24,7 @@ const HOSTS = [
     name: 'catbox',
     upload: async (buffer) => String(await postFile('https://catbox.moe/user/api.php', 'fileToUpload', buffer, { reqtype: 'fileupload' })).trim(),
   },
-  { name: 'tmpfiles', upload: uploadTmpfiles },
+  { name: 'hosting', upload: uploadHosting },
 ]
 
 // memegen.link text rules: space -> _, _ -> __, - -> --, and ~x codes for special characters.
