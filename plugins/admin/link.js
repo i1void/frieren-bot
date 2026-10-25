@@ -1,7 +1,7 @@
 module.exports = {
   usage: ['link'],
   hidden: ['linkgc'],
-  category: 'group',
+  category: 'admin',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

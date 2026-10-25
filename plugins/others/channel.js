@@ -42,7 +42,7 @@ function channelJid(config) {
 module.exports = {
   usage: ['channel', 'sendtext', 'sendmedia'],
   use: '',
-  category: 'channel',
+  category: 'others',
   limit: true,
   execute: async ({ sock, m, config, prefix, command, text, reply, isOwner, useLimit, refundLimit }) => {
     if (command === 'channel') {

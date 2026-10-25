@@ -3,7 +3,7 @@ const { stickerSetMeta } = require('../../lib/media')
 module.exports = {
   usage: ['swm'],
   use: 'packname | author',
-  category: 'tools',
+  category: 'converter',
   execute: async ({ sock, m, config, prefix, command, text, reply }) => {
     if (!m.quoted || m.quoted.mtype !== 'stickerMessage') {
       return reply(`Reply to a sticker with the caption ${prefix}${command} packname | author\nExample: ${prefix}${command} Frieren | Void`)

@@ -62,7 +62,7 @@ async function makeMeme(source, top, bottom) {
 module.exports = {
   usage: ['smeme'],
   use: 'top | bottom',
-  category: 'tools',
+  category: 'converter',
   limit: true,
   execute: async ({ sock, m, config, prefix, command, text, reply, useLimit, refundLimit }) => {
     const target = m.quoted && /image/.test(m.quoted.mtype) ? m.quoted : m

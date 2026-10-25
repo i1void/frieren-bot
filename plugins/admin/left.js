@@ -3,7 +3,7 @@ const { setLeftStatus } = require('../../lib/welcome')
 module.exports = {
   usage: ['left'],
   use: 'on/off',
-  category: 'group',
+  category: 'admin',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ m, config, prefix, command, args, reply }) => {

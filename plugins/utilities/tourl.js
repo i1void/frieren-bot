@@ -2,7 +2,7 @@ const upload = require('../../lib/uploadFile')
 
 module.exports = {
   usage: ['tourl'],
-  category: 'tools',
+  category: 'utilities',
   execute: async ({ sock, m, config, prefix, reply }) => {
     const target = m.quoted || m
     const mime = (target.msg || target).mimetype || ''

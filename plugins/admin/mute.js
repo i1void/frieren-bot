@@ -3,7 +3,7 @@ const { isMuted, setMuted } = require('../../lib/group')
 module.exports = {
   usage: ['mute'],
   use: 'on/off',
-  category: 'group',
+  category: 'admin',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ m, prefix, command, args, reply }) => {

@@ -6,7 +6,7 @@ const PAYMENT = 'QRIS / DANA'
 
 module.exports = {
   usage: ['premium'],
-  category: 'others',
+  category: 'user',
   execute: async ({ config, prefix, m, isOwner, isPremium, reply }) => {
     if (isOwner) return reply('👑 You are the owner, so everything is unlocked.')
 

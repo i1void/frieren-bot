@@ -3,7 +3,7 @@ const { fetchText } = require('../../lib/http')
 module.exports = {
   usage: ['shorturl'],
   use: 'link',
-  category: 'tools',
+  category: 'utilities',
   execute: async ({ config, prefix, text, reply }) => {
     if (!text) return reply(`Example: ${prefix}shorturl https://example.com`)
     try {

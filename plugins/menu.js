@@ -6,7 +6,7 @@ const { version } = require('../package.json')
 module.exports = {
   usage: [],
   hidden: ['menu', 'help'],
-  category: 'tools',
+  category: 'others',
   execute: async ({ sock, config, prefix, reply, isOwner, isPremium }) => {
     const disabled = getDisabledPlugins()
     const offCommands = getDisabledCommands()

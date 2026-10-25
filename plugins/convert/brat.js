@@ -4,7 +4,7 @@ const { fetchBuffer } = require('../../lib/http')
 module.exports = {
   usage: ['brat'],
   use: 'text',
-  category: 'tools',
+  category: 'converter',
   limit: true,
   execute: async ({ sock, m, config, prefix, command, text, reply, useLimit, refundLimit }) => {
     const input = text || m.quoted?.text || ''

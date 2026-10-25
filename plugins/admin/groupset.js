@@ -2,7 +2,7 @@
 module.exports = {
   usage: ['setname', 'setdesc'],
   use: 'teks',
-  category: 'group',
+  category: 'admin',
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,

@@ -1,7 +1,7 @@
 module.exports = {
   usage: ['hidetag'],
   use: 'teks',
-  category: 'group',
+  category: 'admin',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ groupMetadata, text, reply }) => {

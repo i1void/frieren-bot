@@ -4,7 +4,7 @@ module.exports = {
   usage: [],
   hidden: ['setwelcome', 'setleft'],
   use: 'text',
-  category: 'group',
+  category: 'admin',
   groupOnly: true,
   adminOnly: true,
   execute: async ({ m, config, prefix, command, text, reply }) => {

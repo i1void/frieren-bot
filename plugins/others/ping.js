@@ -2,7 +2,7 @@ const { runtime } = require('../../lib/myfunc')
 
 module.exports = {
   usage: ['ping'],
-  category: 'tools',
+  category: 'others',
   execute: async ({ sock, m, reply }) => {
     const start = Date.now()
     await reply('Pinging...')

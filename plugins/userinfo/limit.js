@@ -2,7 +2,7 @@ const { getTimezone } = require('../../lib/db')
 
 module.exports = {
   usage: ['limit'],
-  category: 'others',
+  category: 'user',
   execute: async ({ config, prefix, user, isPremium, reply }) => {
     if (isPremium) return reply('🍟 Your limit : *unlimited* (premium)')
 

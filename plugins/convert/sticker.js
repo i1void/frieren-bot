@@ -1,7 +1,7 @@
 module.exports = {
   usage: ['sticker'],
   hidden: ['s'],
-  category: 'tools',
+  category: 'converter',
   execute: async ({ sock, m, config, prefix, reply }) => {
     const target = m.quoted && /image|video/.test(m.quoted.mtype) ? m.quoted : m
     const mime = (target.msg || target).mimetype || ''
