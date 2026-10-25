@@ -1,5 +1,5 @@
 // Plugin template. Files/folders starting with "_" are ignored by the loader.
-// To make a new command: copy this file to plugins/<folder>/<name>.js (folders: admin, ai, convert, download, fun, group, menfess, others, owner, userinfo, utilities)
+// To make a new command: copy this file to plugins/<folder>/<name>.js (folders: admin, ai, convert, download, group, menfess, others, owner, userinfo, utilities)
 // (without the underscore) and edit it.
 module.exports = {
   usage: ['example'], // command names listed in the menu (the first one is the main name)

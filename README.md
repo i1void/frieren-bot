@@ -61,7 +61,7 @@ Optional keys:
 - `index.js` — WhatsApp connection
 - `handler.js` — command router
 - `plugins/` — one file per command, grouped by folder (`plugins/_events/` holds event plugins):
-  `admin` (group admin tools), `ai`, `convert` (stickers, audio, tts), `download`, `fun`, `others` (ping, status, donate, ...),
+  `admin` (group admin tools), `ai`, `convert` (stickers, audio, tts), `download`, `others` (ping, status, donate, ...),
   `group` (afk, groupinfo), `menfess`, `owner`, `userinfo` (limit, premium), `utilities` (translate, ocr, tourl, ...)
 - `lib/` — helper functions
 - `storage/` — database & media
