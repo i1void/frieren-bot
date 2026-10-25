@@ -8,10 +8,11 @@
 ### # Features
 
 - Downloader (TikTok, Instagram, Facebook)
-- Sticker maker + converter (image/video to sticker, sticker to image)
+- Sticker maker + converter (image/video to sticker, sticker to image), `brat`, `qc` (quote sticker), `emojimix`, `tts`
 - Media converter (to mp3, to voice note)
+- Utilities: `translate`, `ocr`, `tourl`, `shorturl`
 - Group management (kick, promote, tagall, antilink, welcome message, etc)
-- Owner tools (ban, premium, limit, broadcast, enable/disable commands)
+- Owner tools (ban, premium, limit, broadcast, enable/disable commands, database `backup` / `restore`)
 - Plugin system: one file per command, menu is generated automatically
 - Menfess: anonymous two-way messages through the bot (`.menfess 08123456789 | message`), with opt-out, daily caps and an owner log (`.menfesslog`)
 - Anti-spam for commands (warning, then a temporary block) and "Did you mean ...?" with a number reply
@@ -52,12 +53,16 @@ Optional keys:
 - `logChat: false` — turn off the one-line-per-message log in the console
 - `antiSpam` — `cooldown` seconds between commands per user (owner is exempt, `0` = off). Commands sent too soon are ignored; after `warnAt` of them the user gets a warning, after `blockAt` they are blocked for `blockMinutes`
 - `apiBase` — base URL of the API used by the downloader plugins
+- `ocrApiKey` — your own free key from ocr.space for `.ocr` (the built-in demo key is rate limited)
+- `tenorKey` — Tenor API key (Google Cloud) for `.emojimix`; the command stays off without it
 
 ### # Structure
 
 - `index.js` — WhatsApp connection
 - `handler.js` — command router
-- `plugins/` — one file per command (`plugins/_events/` holds event plugins)
+- `plugins/` — one file per command, grouped by folder (`plugins/_events/` holds event plugins):
+  `admin` (group admin tools), `ai`, `convert` (stickers, audio, tts), `download`, `fun`, `others` (ping, status, donate, ...),
+  `group` (afk, groupinfo), `menfess`, `owner`, `userinfo` (limit, premium), `utilities` (translate, ocr, tourl, ...)
 - `lib/` — helper functions
 - `storage/` — database & media
 
@@ -72,7 +77,7 @@ The owner `restart` command only works properly under a process manager like thi
 
 ### # Add a command
 
-Create `plugins/<category>/<name>.js` (copy `plugins/_template.js`) and restart the bot.
+Create `plugins/<folder>/<name>.js` (copy `plugins/_template.js`) and restart the bot.
 It appears in the menu by itself, even inside a brand new category folder.
 
 The menu builds itself from the plugins: the section is the `category`, each name in `usage` becomes a line `name use`, sorted A-Z. Names in `hidden` work as commands but are not listed. Commands switched off with the `plugin` command disappear from the menu too. If every name is in `hidden` (use `usage: []`), the plugin is not in the menu at all.
@@ -82,7 +87,7 @@ module.exports = {
   usage: ['hello', 'hi'], // command names, listed in the menu
   hidden: ['halo'], // optional: work, but not listed
   use: 'name', // optional: argument hint in the menu
-  category: 'tools', // menu section
+  category: 'utilities', // menu section
   // optional: ownerOnly, groupOnly, adminOnly, botAdmin, limit
   execute: async ({ reply, text }) => reply(`Hello ${text}`),
 }
@@ -117,6 +122,8 @@ module.exports = {
 - `.plugin` — list commands, `.plugin off <cmd>` / `.plugin on <cmd>` to disable / enable one
 - `.botstatus` — uptime, memory, groups, users, command count
 - `.menfesslog <code>` — see who sent a menfess (abuse handling)
+- `.backup` — sends a copy of `bot.db` (private chat only; the WhatsApp session is never included)
+- `.restore` — reply to a backup file: it is checked, then the bot restarts with it (the old database is kept as `bot.db.before-restore`)
 - `.ban` `.unban` `.addprem` `.delprem` `.listprem` `.addlimit` `.broadcast` `.join` `.setbio` `.restart`
 
 ### # Deploy
