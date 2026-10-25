@@ -53,7 +53,6 @@ Optional keys:
 - `antiSpam` — `cooldown` seconds between commands per user (owner is exempt, `0` = off). Commands sent too soon are ignored; after `warnAt` of them the user gets a warning, after `blockAt` they are blocked for `blockMinutes`
 - `apiBase` — base URL of the API used by the downloader plugins
 - `ocrApiKey` — your own free key from ocr.space for `.ocr` (the built-in demo key is rate limited)
-- `tenorKey` — Tenor API key (Google Cloud) for `.emojimix`; the command stays off without it
 
 ### # Structure
 
@@ -113,15 +112,6 @@ module.exports = {
   },
 }
 ```
-
-### # Owner commands
-
-- `.plugin` — list commands, `.plugin off <cmd>` / `.plugin on <cmd>` to disable / enable one
-- `.botstatus` — uptime, memory, groups, users, command count
-- `.menfesslog <code>` — see who sent a menfess (abuse handling)
-- `.backup` — sends a copy of `bot.db` (private chat only; the WhatsApp session is never included)
-- `.restore` — reply to a backup file: it is checked, then the bot restarts with it (the old database is kept as `bot.db.before-restore`)
-- `.ban` `.unban` `.addprem` `.delprem` `.listprem` `.addlimit` `.broadcast` `.join` `.setbio` `.restart`
 
 ### # Deploy
 
