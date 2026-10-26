@@ -13,7 +13,7 @@ module.exports = {
       else await sock.sendImageAsSticker(m.chat, buffer, m, opts)
     } catch (err) {
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

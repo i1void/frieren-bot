@@ -9,7 +9,7 @@ module.exports = {
   use: '<lang> text',
   category: 'converter',
   limit: true,
-  execute: async ({ sock, m, config, prefix, command, args, reply, useLimit, refundLimit }) => {
+  execute: async ({ sock, m, prefix, command, args, reply, useLimit, refundLimit }) => {
     const hasLang = LANG.test(args[0] || '') && (args.length > 1 || m.quoted?.text)
     const lang = hasLang ? args[0].toLowerCase() : 'id'
     const input = (hasLang ? args.slice(1).join(' ') : args.join(' ')) || m.quoted?.text || ''
@@ -26,7 +26,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

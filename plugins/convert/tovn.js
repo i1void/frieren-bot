@@ -3,7 +3,7 @@ const { convertToOpus } = require('../../lib/convert')
 module.exports = {
   usage: ['tovn'],
   category: 'converter',
-  execute: async ({ sock, m, config, prefix, reply }) => {
+  execute: async ({ sock, m, prefix, reply }) => {
     if (!m.quoted || !/audio/.test(m.quoted.mtype)) return reply(`Reply to an audio with the caption ${prefix}tovn`)
     try {
       const buffer = await sock.downloadMediaMessage(m.quoted)
@@ -11,7 +11,7 @@ module.exports = {
       await sock.sendMessage(m.chat, { audio, mimetype: 'audio/ogg; codecs=opus', ptt: true }, { quoted: m })
     } catch (err) {
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

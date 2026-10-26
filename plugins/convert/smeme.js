@@ -80,7 +80,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

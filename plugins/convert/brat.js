@@ -1,5 +1,4 @@
 const { fromBuffer } = require('file-type')
-const { fetchBuffer } = require('../../lib/http')
 
 module.exports = {
   usage: ['brat'],
@@ -11,18 +10,18 @@ module.exports = {
     if (!input) return reply(`Enter some text.\nExample: ${prefix}${command} Hai goodbye`)
     if (!useLimit()) return
     try {
-      await reply(config.messages.wait)
-      const image = await fetchBuffer(`${config.apiBase}/generate/brat?text=${encodeURIComponent(input)}`)
+      await reply(mess.wait)
+      const image = await Api.buffer('/generate/brat', { text: input })
       const type = await fromBuffer(image)
       if (!type || !type.mime.startsWith('image/')) {
         refundLimit()
-        return reply(config.messages.error)
+        return reply(mess.error)
       }
       await sock.sendImageAsSticker(m.chat, image, m, { packname: config.packName, author: config.authorName })
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

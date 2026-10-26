@@ -4,7 +4,7 @@ module.exports = {
   usage: ['swm'],
   use: 'packname | author',
   category: 'converter',
-  execute: async ({ sock, m, config, prefix, command, text, reply }) => {
+  execute: async ({ sock, m, prefix, command, text, reply }) => {
     if (!m.quoted || m.quoted.mtype !== 'stickerMessage') {
       return reply(`Reply to a sticker with the caption ${prefix}${command} packname | author\nExample: ${prefix}${command} Frieren | Void`)
     }
@@ -16,7 +16,7 @@ module.exports = {
       await sock.sendMessage(m.chat, { sticker }, { quoted: m })
     } catch (err) {
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

@@ -3,7 +3,7 @@ const { convertWebpToPng, isAnimatedWebp } = require('../../lib/convert')
 module.exports = {
   usage: ['toimg'],
   category: 'converter',
-  execute: async ({ sock, m, config, prefix, reply }) => {
+  execute: async ({ sock, m, prefix, reply }) => {
     if (!m.quoted || m.quoted.mtype !== 'stickerMessage') return reply(`Reply to a sticker with the caption ${prefix}toimg`)
     try {
       const buffer = await sock.downloadMediaMessage(m.quoted)
@@ -12,7 +12,7 @@ module.exports = {
       await sock.sendMessage(m.chat, { image }, { quoted: m })
     } catch (err) {
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }
