@@ -12,6 +12,12 @@
   }
 }
 
+// Load .env (API_KEY). Built into Node 22, no package needed. Missing file is fine.
+try {
+  process.loadEnvFile()
+} catch {}
+require('./lib/config') // globals: Api (void API client) and mess (reply messages)
+
 const {
   default: makeWASocket,
   Browsers,
