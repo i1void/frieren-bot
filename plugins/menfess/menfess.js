@@ -30,7 +30,7 @@ module.exports = {
   category: 'menfess',
   limit: true,
   execute: async ({ sock, m, config, prefix, command, text, reply, useLimit, refundLimit }) => {
-    if (m.isGroup) return reply(config.messages.privateOnly)
+    if (m.isGroup) return reply(mess.privateOnly)
 
     const help =
       `*MENFESS* — send an anonymous message through the bot\n\n` +
@@ -87,7 +87,7 @@ module.exports = {
     } catch (err) {
       console.error('[menfess]', err)
       refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

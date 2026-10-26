@@ -77,7 +77,7 @@ module.exports = {
       await sock.sendMessage(m.chat, { react: { text: '✅', key: m.key } }).catch(() => {})
     } catch (err) {
       console.error('[menfess-reply]', err)
-      await sock.sendMessage(m.chat, { text: config.messages.error }, { quoted: m }).catch(() => {})
+      await sock.sendMessage(m.chat, { text: mess.error }, { quoted: m }).catch(() => {})
     }
     return true // handled
   },
