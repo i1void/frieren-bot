@@ -14,7 +14,7 @@ module.exports = {
   use: 'reply backup file',
   category: 'owner',
   ownerOnly: true,
-  execute: async ({ sock, m, config, prefix, command, reply }) => {
+  execute: async ({ sock, m, prefix, command, reply }) => {
     const doc = m.quoted
     if (!doc || doc.mtype !== 'documentMessage') return reply(`Reply to a backup file (.db) with ${prefix}${command}`)
     if (!/\.db$/i.test(doc.fileName || '')) return reply('That is not a .db backup file.')
@@ -42,7 +42,7 @@ module.exports = {
       process.exit(0)
     } catch (err) {
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     } finally {
       fs.rmSync(check, { force: true })
     }

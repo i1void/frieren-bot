@@ -4,7 +4,7 @@ module.exports = {
   use: 'teks',
   category: 'owner',
   ownerOnly: true,
-  execute: async ({ sock, config, prefix, text, reply, sleep }) => {
+  execute: async ({ sock, prefix, text, reply, sleep }) => {
     if (!text) return reply(`Example: ${prefix}broadcast Announcement...`)
     try {
       const groups = await sock.groupFetchAllParticipating()
@@ -16,7 +16,7 @@ module.exports = {
       }
     } catch (err) {
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

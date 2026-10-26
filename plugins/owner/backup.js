@@ -11,7 +11,7 @@ module.exports = {
   usage: ['backup'],
   category: 'owner',
   ownerOnly: true,
-  execute: async ({ sock, m, config, reply, isGroup }) => {
+  execute: async ({ sock, m, reply, isGroup }) => {
     if (isGroup) return reply('Use this in a private chat, not in a group.')
     const file = path.join(os.tmpdir(), `frieren-backup-${Date.now()}.db`)
     try {
@@ -28,7 +28,7 @@ module.exports = {
       )
     } catch (err) {
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     } finally {
       fs.rmSync(file, { force: true })
     }

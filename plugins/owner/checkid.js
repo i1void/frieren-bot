@@ -1,4 +1,4 @@
-// Turns a WhatsApp Channel link into its ID, for `channelJid` in config.js.
+// Turns a WhatsApp Channel link into its ID, for `channelJid` in config.json.
 module.exports = {
   usage: ['checkid'],
   hidden: ['checklid'],
