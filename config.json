@@ -1,0 +1,19 @@
+{
+  "sessionName": "frieren",
+  "usePairingCode": true,
+  "botNumber": "XXXXXXXXXXX",
+  "owner": ["XXXXXXXXXXX"],
+  "ownerName": "Owner",
+  "botName": "Frieren Bot",
+  "packName": "Frieren",
+  "authorName": "Void",
+  "prefixes": ["#", ".", "!", "/"],
+  "isPublic": true,
+  "antiSpam": { "cooldown": 3, "warnAt": 3, "blockAt": 5, "blockMinutes": 10 },
+  "ocrApiKey": "",
+  "tenorKey": "",
+  "channelJid": "",
+  "limit": { "free": 15, "premium": 10000 },
+  "timezone": "Asia/Jakarta",
+  "countryCode": "62"
+}
