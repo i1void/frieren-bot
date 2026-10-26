@@ -6,7 +6,7 @@ module.exports = {
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,
-  execute: async ({ sock, m, config, prefix, command, text, reply }) => {
+  execute: async ({ sock, m, prefix, command, text, reply }) => {
     if (command === 'setname') {
       if (!text) return reply(`Example: ${prefix}setname New Group Name`)
       await sock.groupUpdateSubject(m.chat, text)
@@ -14,6 +14,6 @@ module.exports = {
       if (!text) return reply(`Example: ${prefix}setdesc New group description`)
       await sock.groupUpdateDescription(m.chat, text)
     }
-    reply(config.messages.done)
+    reply(mess.done)
   },
 }

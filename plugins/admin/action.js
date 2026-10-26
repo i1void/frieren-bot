@@ -16,7 +16,7 @@ const ADD_PROBLEMS = {
   419: 'the group is full',
 }
 
-async function addMember({ sock, m, config, prefix, text, reply }) {
+async function addMember({ sock, m, prefix, text, reply }) {
   const example = `Example: ${prefix}add 6281234567890`
   if (!text) return reply(example)
   if (!/^[\d\s+()-]+$/.test(text)) return reply(`"${text}" is not a phone number.\n${example}`)
@@ -30,7 +30,7 @@ async function addMember({ sock, m, config, prefix, text, reply }) {
 
   const [result] = await sock.groupParticipantsUpdate(m.chat, [found.jid], 'add')
   const status = String(result?.status ?? '200')
-  if (status === '200') return reply(config.messages.done)
+  if (status === '200') return reply(mess.done)
 
   const why = ADD_PROBLEMS[status] || `WhatsApp refused it (code ${status})`
   let message = `❌ Could not add +${digits}: ${why}.`
@@ -48,12 +48,12 @@ module.exports = {
   groupOnly: true,
   adminOnly: true,
   botAdmin: true,
-  execute: async ({ sock, m, config, prefix, command, text, mentionedJid, reply }) => {
-    if (command === 'add') return addMember({ sock, m, config, prefix, text, reply })
+  execute: async ({ sock, m, prefix, command, text, mentionedJid, reply }) => {
+    if (command === 'add') return addMember({ sock, m, prefix, text, reply })
 
     const action = ACTIONS[command]
     if (!mentionedJid.length) return reply(action.ask)
     await sock.groupParticipantsUpdate(m.chat, mentionedJid, action.update)
-    reply(config.messages.done)
+    reply(mess.done)
   },
 }
