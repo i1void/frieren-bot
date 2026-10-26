@@ -9,7 +9,7 @@ module.exports = {
   use: '<lang> text',
   category: 'utilities',
   limit: true,
-  execute: async ({ m, config, prefix, command, args, reply, useLimit, refundLimit }) => {
+  execute: async ({ m, prefix, command, args, reply, useLimit, refundLimit }) => {
     const first = args[0] || ''
     const hasLang = LANG.test(first) && (args.length > 1 || m.quoted?.text)
     const lang = hasLang ? first.toLowerCase() : 'id'
@@ -25,13 +25,13 @@ module.exports = {
       const result = (json?.[0] || []).map((part) => part?.[0] || '').join('')
       if (!result) {
         refundLimit()
-        return reply(config.messages.error)
+        return reply(mess.error)
       }
       reply(`🌐 *${json[2] || 'auto'} → ${lang}*\n\n${result}`)
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

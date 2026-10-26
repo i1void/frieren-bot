@@ -1,4 +1,3 @@
-const { fetchJson } = require('../../lib/http')
 const { getTimezone } = require('../../lib/db')
 
 const USERNAME = /^[a-z\d](?:[a-z\d-]{0,38})$/i
@@ -60,8 +59,8 @@ module.exports = {
     if (!USERNAME.test(username)) return reply('That is not a valid GitHub username.')
 
     try {
-      await reply(config.messages.wait)
-      const json = await fetchJson(`${config.apiBase}/stalk/github?username=${encodeURIComponent(username)}`)
+      await reply(mess.wait)
+      const json = await Api.json('/stalk/github', { username })
       if (!json?.status || !json.result) return reply(`GitHub user "${username}" was not found.`)
 
       const caption = buildCaption(json.result, getTimezone(config))
@@ -76,7 +75,7 @@ module.exports = {
     } catch (err) {
       if (/HTTP 404/.test(err.message)) return reply(`GitHub user "${username}" was not found.`)
       console.error(err)
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

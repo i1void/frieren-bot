@@ -16,7 +16,7 @@ module.exports = {
     const lang = /^[a-z]{3}$/i.test(args[0] || '') ? args[0].toLowerCase() : 'eng'
     if (!useLimit()) return
     try {
-      await reply(config.messages.wait)
+      await reply(mess.wait)
       const buffer = await sock.downloadMediaMessage(target)
       const { ext, mime } = (await fromBuffer(buffer)) || {}
       const form = new FormData()
@@ -38,7 +38,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }
