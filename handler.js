@@ -16,7 +16,7 @@ const PHONE_ARG = /^@?\+?\d[\d-]{7,}$/
 const TYPO_TTL = 3 * 60 * 1000
 const typoSessions = new Map() // sender -> { m, prefix, args, names, timer }
 
-// Returns the config.messages key to reply with, or null when allowed.
+// Returns the mess key to reply with, or null when allowed.
 // adminOnly / botAdmin imply groupOnly. The owner bypasses adminOnly but NOT botAdmin.
 function checkPermission(plugin, { isOwner, isGroup, isAdmin, isBotAdmin }) {
   if (plugin.ownerOnly && !isOwner) return 'ownerOnly'
@@ -113,7 +113,7 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
 
   if (!isOwner) {
     const gate = antiSpam.check(sender)
-    if (!gate.ok) return gate.notice ? reply(`${config.messages[gate.notice]} (${gate.wait}s)`) : undefined
+    if (!gate.ok) return gate.notice ? reply(`${mess[gate.notice]} (${gate.wait}s)`) : undefined
   }
 
   const isPremium = isOwner || hasPremium(sender)
@@ -135,7 +135,7 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   const isAdmin = isGroup ? groupAdmins.includes(sender) : false
 
   const denied = checkPermission(plugin, { isOwner, isGroup, isAdmin, isBotAdmin })
-  if (denied) return reply(config.messages[denied])
+  if (denied) return reply(mess[denied])
 
   const mentionedJid =
     m.mentionedJid && m.mentionedJid.length
@@ -152,7 +152,7 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   const useLimit = () => {
     if (isPremium) return true
     if (!spendLimit(sender, config)) {
-      reply(`${config.messages.limitHabis}\nYour limit resets every day at 00:00 (${getTimezone(config)}).`)
+      reply(`${mess.limitHabis}\nYour limit resets every day at 00:00 (${getTimezone(config)}).`)
       return false
     }
     spent = true
@@ -198,7 +198,7 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   } catch (err) {
     console.error(`[plugin:${plugin.name}]`, err)
     refundLimit()
-    reply(config.messages.error).catch(() => {})
+    reply(mess.error).catch(() => {})
   }
 }
 
