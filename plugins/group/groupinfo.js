@@ -2,7 +2,7 @@ const { getTimezone } = require('../../lib/db')
 
 const MAX_DESC = 300
 
-// "21 Oct 2026" in the timezone from config.js.
+// "21 Oct 2026" in the timezone from config.json.
 const formatDate = (seconds, config) =>
   new Intl.DateTimeFormat('en-GB', { timeZone: getTimezone(config), day: 'numeric', month: 'short', year: 'numeric' }).format(
     new Date(seconds * 1000)
