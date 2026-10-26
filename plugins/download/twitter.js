@@ -1,5 +1,3 @@
-const { fetchJson } = require('../../lib/http')
-
 // "720x720" -> 518400, so the biggest variant sorts first
 const pixels = (v) => (v.resolution || '').split('x').reduce((a, b) => a * (Number(b) || 0), 1)
 
@@ -9,14 +7,14 @@ module.exports = {
   use: 'link',
   category: 'downloader',
   limit: true,
-  execute: async ({ sock, m, config, prefix, command, text, reply, sleep, useLimit, refundLimit }) => {
+  execute: async ({ sock, m, prefix, command, text, reply, sleep, useLimit, refundLimit }) => {
     if (!text) return reply(`Enter a Twitter/X link.\nExample: ${prefix}${command} https://x.com/user/status/123`)
     if (!/(twitter|x)\.com\//i.test(text)) return reply('Invalid link, use a Twitter/X post link.')
     if (!useLimit()) return
     let sent = 0 // media already delivered: no refund after that
     try {
       sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
-      const json = await fetchJson(`${config.apiBase}/downloader/twitter?url=${encodeURIComponent(text)}`)
+      const json = await Api.json('/downloader/twitter', { url: text })
       const { title, media } = json?.result || {}
       if (!json?.status || !media?.length) {
         refundLimit()
@@ -44,7 +42,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       if (!sent) refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

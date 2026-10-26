@@ -1,22 +1,20 @@
-const { fetchJson } = require('../../lib/http')
-
 module.exports = {
   usage: ['tt'],
   hidden: ['tiktok'],
   use: 'link',
   category: 'downloader',
   limit: true,
-  execute: async ({ sock, m, config, prefix, text, reply, sleep, useLimit, refundLimit }) => {
+  execute: async ({ sock, m, prefix, text, reply, sleep, useLimit, refundLimit }) => {
     if (!text) return reply(`Enter a TikTok link.\nExample: ${prefix}tiktok https://vt.tiktok.com/xxxx`)
     if (!useLimit()) return
     let sent = 0 // media already delivered: no refund after that
     try {
       sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
       const start = Date.now()
-      const json = await fetchJson(`${config.apiBase}/downloader/tiktok?url=${encodeURIComponent(text)}`)
+      const json = await Api.json('/downloader/tiktok', { url: text })
       if (!json?.status || !json.result) {
         refundLimit()
-        return reply(config.messages.error)
+        return reply(mess.error)
       }
       const { type, media } = json.result
       const caption = `🍟 *Fetching* : ${Date.now() - start} ms`
@@ -41,7 +39,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       if (!sent) refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }

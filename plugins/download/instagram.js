@@ -6,7 +6,7 @@ module.exports = {
   use: 'link',
   category: 'downloader',
   limit: true,
-  execute: async ({ sock, m, config, prefix, text, reply, sleep, useLimit, refundLimit }) => {
+  execute: async ({ sock, m, prefix, text, reply, sleep, useLimit, refundLimit }) => {
     if (!text) return reply(`Enter an Instagram link.\nExample: ${prefix}ig https://instagram.com/p/xxxx`)
     if (!useLimit()) return
     let sent = 0 // media already delivered: no refund after that
@@ -29,7 +29,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       if (!sent) refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }
