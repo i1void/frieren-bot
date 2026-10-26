@@ -1,7 +1,7 @@
 const { db } = require('../../lib/database')
 
 // Lets users post to the bot's WhatsApp Channel through the bot.
-// Needs `channelJid` in config.js (the bot's number must be the owner/admin of that channel).
+// Needs `channelJid` in config.json (the bot's number must be the owner/admin of that channel).
 db.exec(`
   CREATE TABLE IF NOT EXISTS channel_posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,7 +59,7 @@ module.exports = {
     }
 
     const jid = channelJid(config)
-    if (!jid) return reply('Fitur channel belum diatur. Owner: isi `channelJid` di config.js.')
+    if (!jid) return reply('Fitur channel belum diatur. Owner: isi `channelJid` di config.json.')
 
     const sender = m.sender
     if (!isOwner) {
@@ -82,7 +82,7 @@ module.exports = {
       } catch (err) {
         console.error('[channel]', err)
         refundLimit()
-        reply(config.messages.error)
+        reply(mess.error)
       }
       return
     }
@@ -100,7 +100,7 @@ module.exports = {
 
     if (!useLimit()) return
     try {
-      await reply(config.messages.wait)
+      await reply(mess.wait)
       const buffer = await sock.downloadMediaMessage(target)
       await sock.sendMessage(jid, isImage ? { image: buffer, caption: text } : { video: buffer, caption: text })
       insertPost.run(sender, isImage ? 'image' : 'video', text, Date.now())
@@ -109,7 +109,7 @@ module.exports = {
     } catch (err) {
       console.error('[channel]', err)
       refundLimit()
-      reply(config.messages.error)
+      reply(mess.error)
     }
   },
 }
