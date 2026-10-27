@@ -2,13 +2,13 @@ const axios = require('axios')
 const FormData = require('form-data')
 const { fromBuffer } = require('file-type')
 
-// ocr.space. The default key is their public demo key (rate limited): set config.ocrApiKey for your own free key.
+// ocr.space. The default key is their public demo key (rate limited): set OCR_API_KEY in .env for your own free key.
 module.exports = {
   usage: ['ocr'],
   use: '[lang] image',
   category: 'utilities',
   limit: true,
-  execute: async ({ sock, m, config, prefix, command, args, reply, useLimit, refundLimit }) => {
+  execute: async ({ sock, m, prefix, command, args, reply, useLimit, refundLimit }) => {
     const target = m.quoted || m
     if (!/image/.test((target.msg || target).mimetype || '')) {
       return reply(`Send or reply to an image with the caption ${prefix}${command}\nOptional language: ${prefix}${command} eng (eng, ind, jpn, kor, chs, ...)`)
@@ -25,7 +25,7 @@ module.exports = {
       form.append('OCREngine', '2')
       form.append('isOverlayRequired', 'false')
       const { data } = await axios.post('https://api.ocr.space/parse/image', form, {
-        headers: { ...form.getHeaders(), apikey: config.ocrApiKey || 'helloworld' },
+        headers: { ...form.getHeaders(), apikey: process.env.OCR_API_KEY || 'helloworld' },
         timeout: 60000,
         maxBodyLength: Infinity,
       })
