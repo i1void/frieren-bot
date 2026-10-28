@@ -1,12 +1,6 @@
 const { fetchBuffer } = require('../../lib/http')
 
 const FB_LINK = /^https?:\/\/(?:[\w-]+\.)?(?:facebook\.com|fb\.watch|fb\.com)\//i
-const HEADERS = {
-  'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-  Referer: 'https://www.facebook.com/',
-}
-
 const cleanTitle = (title = '') => {
   let t = String(title)
   const parts = t.split(' | ')
@@ -47,13 +41,13 @@ module.exports = {
       let buffer
       for (const url of candidates) {
         try {
-          const buf = await fetchBuffer(url, { timeout: 90000, headers: HEADERS })
+          const buf = await fetchBuffer(url, { timeout: 90000 })
           if (buf?.length > 1024) {
             buffer = buf
             break
           }
         } catch (err) {
-          console.error('[fb] download failed:', err.message)
+          console.error('[fb] download failed:', err.code || err.type || err.message.slice(-80))
         }
       }
       if (!buffer) {
