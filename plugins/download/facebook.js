@@ -1,3 +1,21 @@
+const { fetchBuffer } = require('../../lib/http')
+
+const FB_LINK = /^https?:\/\/(?:[\w-]+\.)?(?:facebook\.com|fb\.watch|fb\.com)\//i
+const HEADERS = {
+  'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+  Referer: 'https://www.facebook.com/',
+}
+
+const cleanTitle = (title = '') => {
+  let t = String(title)
+  const parts = t.split(' | ')
+  if (parts.length > 1 && /views|reactions|likes/i.test(parts[0])) parts.shift()
+  if (parts.length > 1) parts.pop()
+  t = parts.join(' | ').trim()
+  return t.length > 900 ? t.slice(0, 897) + '...' : t
+}
+
 module.exports = {
   usage: ['fb'],
   hidden: ['facebook'],
@@ -5,21 +23,49 @@ module.exports = {
   category: 'downloader',
   limit: true,
   execute: async ({ sock, m, prefix, text, reply, useLimit, refundLimit }) => {
-    if (!text) return reply(`Enter a Facebook link.\nExample: ${prefix}fb https://facebook.com/watch/xxxx`)
+    const link = (text || '').trim().split(/\s+/)[0]
+    if (!link) return reply(`Enter a Facebook link.\nExample: ${prefix}fb https://facebook.com/watch/xxxx`)
+    if (!FB_LINK.test(link)) return reply('Invalid link, use a Facebook video/reel link.')
     if (!useLimit()) return
     try {
       sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
-      const json = await Api.json('/downloader/facebook', { url: text })
-      if (!json?.status || !json.result) {
+      const json = await Api.json('/downloader/facebook', { url: link }, { timeout: 45000 })
+      const result = json?.result
+      if (!json?.status || !result) {
         refundLimit()
         return reply(mess.error)
       }
-      const videoUrl = json.result.media?.video || json.result.media?.video_sd
-      if (!videoUrl) {
+
+      const candidates = [result.media?.video, result.media?.video_sd].filter(
+        (u, i, arr) => typeof u === 'string' && /^https?:\/\//.test(u) && arr.indexOf(u) === i
+      )
+      if (!candidates.length) {
         refundLimit()
         return reply('Video not found / invalid link.')
       }
-      await sock.sendMessage(m.chat, { video: { url: videoUrl }, caption: json.result.title || '' }, { quoted: m })
+
+      let buffer
+      for (const url of candidates) {
+        try {
+          const buf = await fetchBuffer(url, { timeout: 90000, headers: HEADERS })
+          if (buf?.length > 1024) {
+            buffer = buf
+            break
+          }
+        } catch (err) {
+          console.error('[fb] download failed:', err.message)
+        }
+      }
+      if (!buffer) {
+        refundLimit()
+        return reply(mess.error)
+      }
+
+      await sock.sendMessage(
+        m.chat,
+        { video: buffer, mimetype: 'video/mp4', caption: cleanTitle(result.title) },
+        { quoted: m }
+      )
     } catch (err) {
       console.error(err)
       refundLimit()
