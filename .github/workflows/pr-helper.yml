@@ -89,4 +89,4 @@ jobs:
         run: |
           TITLE=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json title -q .title)
           gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" \
-            --squash --delete-branch --subject "$TITLE (#$PR)"
+            --squash --delete-branch --subject "$TITLE (#$PR)" --body ""
