@@ -81,3 +81,12 @@ jobs:
         run: |
           gh pr review "$PR" --repo "$GITHUB_REPOSITORY" \
             --approve --body "Auto-approved by frieren-grimoire."
+
+      - name: Merge PR
+        if: github.event.pull_request.user.login == 'i1void' && github.event.action == 'opened'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          TITLE=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json title -q .title)
+          gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" \
+            --squash --delete-branch --subject "$TITLE (#$PR)"
