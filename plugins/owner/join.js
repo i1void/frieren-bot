@@ -11,7 +11,7 @@ module.exports = {
       reply('✅ Successfully joined the group.')
     } catch (err) {
       console.error(err)
-      reply('❌ Failed to join, the link may be invalid.')
+      await reply('❌ Failed to join, the link may be invalid.').catch(console.error)
     }
   },
 }

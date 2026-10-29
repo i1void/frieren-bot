@@ -87,7 +87,7 @@ module.exports = {
     } catch (err) {
       console.error('[menfess]', err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

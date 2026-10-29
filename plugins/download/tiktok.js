@@ -14,7 +14,7 @@ module.exports = {
       const json = await Api.json('/downloader/tiktok', { url: text })
       if (!json?.status || !json.result) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
       const { type, media } = json.result
       const caption = `🍟 *Fetching* : ${Date.now() - start} ms`
@@ -39,7 +39,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       if (!sent) refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

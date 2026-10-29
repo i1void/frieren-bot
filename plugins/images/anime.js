@@ -13,13 +13,13 @@ module.exports = {
       const type = buffer?.length ? await fromBuffer(buffer) : null
       if (!type?.mime?.startsWith('image/')) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
       await sock.sendMessage(m.chat, { image: buffer, caption: mess.done }, { quoted: m })
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

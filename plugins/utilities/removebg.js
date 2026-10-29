@@ -29,7 +29,7 @@ module.exports = {
       const result = json?.url || json?.low_resolution || json?.preview_demo
       if (json?.status !== 200 || !result) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
 
       const buffer = await fetchBuffer(result, { timeout: 60000 })
@@ -42,7 +42,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

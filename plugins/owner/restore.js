@@ -42,7 +42,7 @@ module.exports = {
       process.exit(0)
     } catch (err) {
       console.error(err)
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     } finally {
       fs.rmSync(check, { force: true })
     }

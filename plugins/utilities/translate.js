@@ -25,13 +25,13 @@ module.exports = {
       const result = (json?.[0] || []).map((part) => part?.[0] || '').join('')
       if (!result) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
       reply(`🌐 *${json[2] || 'auto'} → ${lang}*\n\n${result}`)
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

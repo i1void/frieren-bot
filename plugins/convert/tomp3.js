@@ -13,7 +13,7 @@ module.exports = {
       await sock.sendMessage(m.chat, { audio, mimetype: 'audio/mpeg' }, { quoted: m })
     } catch (err) {
       console.error(err)
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

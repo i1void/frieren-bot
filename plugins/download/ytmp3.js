@@ -22,7 +22,7 @@ module.exports = {
       const file = r?.m4a?.url ? r.m4a : r?.best
       if (!json?.status || !file?.url) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
       if (file.size_mb > MAX_MB) {
         refundLimit()
@@ -55,7 +55,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }
