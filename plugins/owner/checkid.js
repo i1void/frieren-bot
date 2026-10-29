@@ -14,7 +14,7 @@ module.exports = {
       reply(`*${name}*\n${id}`)
     } catch (err) {
       console.error('[checkid]', err)
-      reply('Channel not found. Check the link and try again.')
+      await reply('Channel not found. Check the link and try again.').catch(console.error)
     }
   },
 }

@@ -61,7 +61,7 @@ module.exports = {
     try {
       await reply(mess.wait)
       const json = await Api.json('/stalk/github', { username })
-      if (!json?.status || !json.result) return reply(`GitHub user "${username}" was not found.`)
+      if (!json?.status || !json.result) return reply(`GitHub user "${username}" was not found.`).catch(console.error)
 
       const caption = buildCaption(json.result, getTimezone(config))
       if (json.result.avatar) {
@@ -73,9 +73,9 @@ module.exports = {
       }
       await reply(caption)
     } catch (err) {
-      if (/HTTP 404/.test(err.message)) return reply(`GitHub user "${username}" was not found.`)
+      if (/HTTP 404/.test(err.message)) return reply(`GitHub user "${username}" was not found.`).catch(console.error)
       console.error(err)
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

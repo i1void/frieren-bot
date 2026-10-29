@@ -14,7 +14,7 @@ module.exports = {
       reply(`🔗 ${url}`)
     } catch (err) {
       console.error(err)
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

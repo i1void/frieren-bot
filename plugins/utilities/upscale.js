@@ -28,7 +28,7 @@ module.exports = {
       const json = await Api.json('/tools/upscale', { url }, { timeout: 90000 })
       if (!json?.status || !json?.result_url) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
 
       const image = await fetchBuffer(json.result_url, { timeout: 60000 })
@@ -36,7 +36,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

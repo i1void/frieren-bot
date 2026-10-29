@@ -27,7 +27,7 @@ module.exports = {
       const result = json?.result
       if (!json?.status || !result) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
 
       const candidates = [result.media?.video, result.media?.video_sd].filter(
@@ -52,7 +52,7 @@ module.exports = {
       }
       if (!buffer) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
 
       await sock.sendMessage(
@@ -63,7 +63,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

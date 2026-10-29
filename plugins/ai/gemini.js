@@ -15,13 +15,13 @@ module.exports = {
       const answer = json?.result?.response
       if (!json?.status || !answer) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
       reply(answer)
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

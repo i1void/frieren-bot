@@ -21,7 +21,7 @@ module.exports = {
       const r = json?.result
       if (!json?.status || !r?.url) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
       if (r.size_mb > MAX_MB) {
         refundLimit()
@@ -33,7 +33,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

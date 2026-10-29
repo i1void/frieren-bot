@@ -42,7 +42,7 @@ module.exports = {
     } catch (err) {
       console.error(err)
       if (!sent) refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }

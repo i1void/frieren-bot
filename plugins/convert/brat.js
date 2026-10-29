@@ -15,13 +15,13 @@ module.exports = {
       const type = await fromBuffer(image)
       if (!type || !type.mime.startsWith('image/')) {
         refundLimit()
-        return reply(mess.error)
+        return reply(mess.error).catch(console.error)
       }
       await sock.sendImageAsSticker(m.chat, image, m, { packname: config.packName, author: config.authorName })
     } catch (err) {
       console.error(err)
       refundLimit()
-      reply(mess.error)
+      await reply(mess.error).catch(console.error)
     }
   },
 }
