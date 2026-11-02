@@ -12,6 +12,5 @@
   "antiSpam": { "cooldown": 3, "warnAt": 3, "blockAt": 5, "blockMinutes": 10 },
   "channelJid": "",
   "limit": { "free": 15, "premium": 10000 },
-  "timezone": "Asia/Jakarta",
   "countryCode": "62"
 }
