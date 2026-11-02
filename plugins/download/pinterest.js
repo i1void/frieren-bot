@@ -1,3 +1,6 @@
+const { remuxToMp4 } = require('../../lib/convert')
+const { fetchBuffer } = require('../../lib/http')
+
 module.exports = {
   usage: ['pinterest'],
   hidden: ['pin', 'pindl'],
@@ -22,7 +25,18 @@ module.exports = {
 
       // Video pin
       if (media.video) {
-        await sock.sendMessage(m.chat, { video: { url: media.video }, caption }, { quoted: m })
+        // Download and re-wrap as a standard MP4; the raw file has an "M4V" brand that WhatsApp may refuse to play
+        let video
+        try {
+          video = await remuxToMp4(await fetchBuffer(media.video, { timeout: 60000 }))
+        } catch (e) {
+          console.error('pinterest remux failed, sending original url:', e.message)
+        }
+        await sock.sendMessage(
+          m.chat,
+          video ? { video, mimetype: 'video/mp4', caption } : { video: { url: media.video }, mimetype: 'video/mp4', caption },
+          { quoted: m }
+        )
         sent = true
         return
       }
