@@ -26,6 +26,9 @@ cd frieren-bot
 # Install dependencies
 npm install
 
+# Create your .env and fill in API_KEY
+cp .env.example .env
+
 # Run the bot
 npm start
 ```
@@ -44,15 +47,27 @@ Upgrading from the old JSON files: just start the bot. They are imported once an
 
 ### # Config
 
-All settings live in `config.js`: bot number, owner, prefixes, sticker pack/author name, free/premium limit.
+Configuration consists of two files: `config.json` and `.env`.
+
+`config.json`: bot number, owner, prefixes, sticker pack/author name, free/premium limit.
 
 Optional keys:
 
-- `timezone` — daily limit reset at 00:00 in this timezone (default `Asia/Jakarta`)
 - `logChat: false` — turn off the one-line-per-message log in the console
 - `antiSpam` — `cooldown` seconds between commands per user (owner is exempt, `0` = off). Commands sent too soon are ignored; after `warnAt` of them the user gets a warning, after `blockAt` they are blocked for `blockMinutes`
-- `apiBase` — base URL of the API used by the downloader plugins
-- `ocrApiKey` — your own free key from ocr.space for `.ocr` (the built-in demo key is rate limited)
+
+### # Environment (.env)
+
+```env
+### Void API : https://api.i1void.is-a.dev
+API_KEY=
+
+# Optional: your own free key from https://ocr.space/ocrapi for .ocr
+OCR_API_KEY=
+
+# Timezone (default Asia/Jakarta)
+TZ=Asia/Jakarta
+```
 
 ### # Structure
 
