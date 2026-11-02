@@ -41,7 +41,7 @@ module.exports = {
       }
 
       refundLimit()
-      reply('Media not found / invalid link.')
+      return reply('Media not found / invalid link.')
     } catch (err) {
       console.error(err)
       if (!sent) refundLimit()
