@@ -4,39 +4,41 @@ module.exports = {
   use: 'link',
   category: 'downloader',
   limit: true,
-  execute: async ({ sock, m, prefix, command, text, reply, useLimit, refundLimit }) => {
+  execute: async ({ sock, m, prefix, command, text, reply, sleep, useLimit, refundLimit }) => {
     if (!text) return reply(`Enter a Pinterest link.\nExample: ${prefix}${command} https://pin.it/xxxx`)
     if (!/(pinterest\.[a-z.]+|pin\.it)\//i.test(text)) return reply('Invalid link, use a Pinterest pin link.')
     if (!useLimit()) return
     let sent = false // media already delivered: no refund after that
     try {
       sock.sendMessage(m.chat, { react: { text: '🕒', key: m.key } }).catch(() => {})
-      const json = await Api.json('/downloader/pinterestv2', { url: text.trim() }, { timeout: 30000 })
-      const { title, type, downloads } = json?.result || {}
-      if (!json?.status || !downloads?.length) {
+      const json = await Api.json('/downloader/pinterest', { url: text.trim() }, { timeout: 30000 })
+      const { title, type, media } = json?.result || {}
+      if (!json?.status || !media) {
         refundLimit()
         return reply('Media not found / invalid link.')
       }
 
       const caption = title || ''
-      const isCover = (d) => /cover/i.test(d.quality || '')
 
-      // Video pin: prefer the [Direct] .mp4 link (the tokenized "image" entry is only a redirect to the same video)
-      const video =
-        downloads.find((d) => d.type === 'video' && /\.mp4($|\?)/i.test(d.url)) ||
-        downloads.find((d) => d.type === 'video')
-
-      if (type === 'video' && video?.url) {
-        await sock.sendMessage(m.chat, { video: { url: video.url }, caption }, { quoted: m })
+      // Video pin
+      if (media.video) {
+        await sock.sendMessage(m.chat, { video: { url: media.video }, caption }, { quoted: m })
         sent = true
         return
       }
 
-      // Image pin: first non-cover image, otherwise whatever image is available
-      const image = downloads.find((d) => d.type === 'image' && !isCover(d)) || downloads.find((d) => d.type === 'image')
-      if (image?.url) {
-        await sock.sendMessage(m.chat, { image: { url: image.url }, caption }, { quoted: m })
-        sent = true
+      // Image pin: media.image is the same as media.images[0], so de-duplicate
+      const images = [...new Set([media.image, ...(Array.isArray(media.images) ? media.images : [])].filter(Boolean))]
+      if (images.length) {
+        for (let i = 0; i < images.length; i++) {
+          await sock.sendMessage(
+            m.chat,
+            { image: { url: images[i] }, caption: i === 0 ? caption : '' },
+            { quoted: m }
+          )
+          sent = true
+          if (i < images.length - 1) await sleep(500)
+        }
         return
       }
 
