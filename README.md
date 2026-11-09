@@ -47,7 +47,8 @@ Settings live in two files: `config.json` and `.env`.
 ```
 
 ```.env
-### REST API key (default: Void API : https://api.i1void.is-a.dev)
+### REST API key (optional, default: Void API : https://api.i1void.is-a.dev)
+### The API is free without a key, a key only raises the rate limit
 API_KEY=
 
 ### Optional : your own key from https://ocr.space/ocrapi
@@ -58,7 +59,7 @@ TZ=Asia/Jakarta
 ```
 
 > [!NOTE]
-> You are not tied to Void API. Change `API_URL` in `lib/globals.js` to use another REST API, or call any REST API inside a plugin with `fetchJson` from `lib/http.js`.
+> You are not tied to Void API. Change `API_URL` in `lib/config.js` to use another REST API, or call any REST API inside a plugin with `fetchJson` from `lib/http.js`.
 
 ### ⌗ HOW TO
 
