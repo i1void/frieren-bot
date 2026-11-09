@@ -12,5 +12,6 @@
   "antiSpam": { "cooldown": 3, "warnAt": 3, "blockAt": 5, "blockMinutes": 10 },
   "channelJid": "",
   "limit": { "free": 15, "premium": 10000 },
-  "countryCode": "62"
+  "countryCode": "62",
+  "thumbnail": ""
 }
