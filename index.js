@@ -1,5 +1,5 @@
 import './lib/quietLogs.js'
-import './lib/globals.js'
+import './lib/config.js'
 
 import {
   makeWASocket,
