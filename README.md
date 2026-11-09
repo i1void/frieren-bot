@@ -41,7 +41,8 @@ Settings live in two files: `config.json` and `.env`.
    "antiSpam": { "cooldown": 3, "warnAt": 3, "blockAt": 5, "blockMinutes": 10 },
    "channelJid": "",
    "limit": { "free": 15, "premium": 10000 }, // Usage limit per day
-   "countryCode": "62"
+   "countryCode": "62",
+   "thumbnail": "" // Menu thumbnail link (optional). Empty = use storage/media/image/thumb.jpg
 }
 ```
 
