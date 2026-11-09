@@ -1,9 +1,8 @@
-const { fetchJson } = require('../../lib/http')
+import { fetchJson } from '../../lib/http.js'
 
-// Google's public translate endpoint (no key). Language codes: id, en, ja, ko, ar, es, ...
 const LANG = /^[a-z]{2,3}(-[a-z]{2,4})?$/i
 
-module.exports = {
+export default {
   usage: ['translate'],
   hidden: ['tr'],
   use: '<lang> text',

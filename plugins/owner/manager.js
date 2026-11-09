@@ -1,10 +1,9 @@
-const { addPremium, removePremium, formatExpiry, getBanned, setBanned } = require('../../lib/access')
+import { addPremium, removePremium, formatExpiry, getBanned, setBanned } from '../../lib/access.js'
 
 const MAX_DAYS = 3650
 const UNIT_IN_DAYS = { d: 1, h: 1 / 24, m: 1 / 1440 }
 
-// User management for the owner: +prem / -prem (addprem / delprem still work), ban, unban.
-module.exports = {
+export default {
   usage: ['+prem', '-prem', 'ban', 'unban'],
   hidden: ['addprem', 'delprem'],
   category: 'owner',
@@ -36,9 +35,6 @@ module.exports = {
       }
 
       default: {
-        // +prem / addprem. The last argument is the duration: 30d (days), 12h (hours), 90m (minutes), or just a
-        // number for days. At most 7 digits, so a typo like 99999 is rejected, not read as "permanent". The router
-        // only reads 8+ digit arguments as a phone number, so the two never clash. No duration = permanent.
         const last = (args[args.length - 1] || '').toLowerCase()
         const match = last.match(/^(\d{1,7})([dhm])?$/)
         const days = match ? Number(match[1]) * UNIT_IN_DAYS[match[2] || 'd'] : null

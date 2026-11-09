@@ -1,9 +1,9 @@
-const { listPlugins, getPlugin } = require('../../lib/pluginLoader')
-const { getDisabledPlugins, setDisabledPlugins, isPluginDisabled } = require('../../lib/settings')
+import { listPlugins, getPlugin } from '../../lib/pluginLoader.js'
+import { getDisabledPlugins, setDisabledPlugins, isPluginDisabled } from '../../lib/settings.js'
 
 const PROTECTED = ['plugin'] // switching this one off would lock the owner out
 
-module.exports = {
+export default {
   usage: ['plugin'],
   hidden: ['plugins'],
   category: 'owner',

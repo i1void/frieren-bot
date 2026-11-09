@@ -1,6 +1,6 @@
-const { isGroupMode, setGroupMode } = require('../../lib/settings')
+import { isGroupMode, setGroupMode } from '../../lib/settings.js'
 
-module.exports = {
+export default {
   usage: ['groupmode'],
   use: 'on/off',
   category: 'owner',

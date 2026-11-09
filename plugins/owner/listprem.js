@@ -1,6 +1,6 @@
-const { listPremium, formatExpiry } = require('../../lib/access')
+import { listPremium, formatExpiry } from '../../lib/access.js'
 
-module.exports = {
+export default {
   usage: ['listprem'],
   category: 'owner',
   ownerOnly: true,

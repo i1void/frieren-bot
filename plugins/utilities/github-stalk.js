@@ -1,4 +1,4 @@
-const { getTimezone } = require('../../lib/db')
+import { getTimezone } from '../../lib/limits.js'
 
 const USERNAME = /^[a-z\d](?:[a-z\d-]{0,38})$/i
 const clip = (text, max) => (text.length > max ? `${text.slice(0, max - 1)}…` : text)
@@ -48,7 +48,7 @@ function buildCaption(r, timeZone) {
     .join('\n')
 }
 
-module.exports = {
+export default {
   usage: ['githubstalk'],
   hidden: ['gitstalk'],
   use: 'username',

@@ -1,6 +1,6 @@
-const { setWelcomeStatus } = require('../../lib/welcome')
+import { setWelcomeStatus } from '../../lib/welcome.js'
 
-module.exports = {
+export default {
   usage: ['welcome'],
   use: 'on/off',
   category: 'admin',

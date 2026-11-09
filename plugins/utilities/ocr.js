@@ -1,9 +1,8 @@
-const axios = require('axios')
-const FormData = require('form-data')
-const { fromBuffer } = require('file-type')
+import axios from 'axios'
+import FormData from 'form-data'
+import { fromBuffer } from '../../lib/fileType.js'
 
-// ocr.space. The default key is their public demo key (rate limited): set OCR_API_KEY in .env for your own free key.
-module.exports = {
+export default {
   usage: ['ocr'],
   use: '[lang] image',
   category: 'utilities',

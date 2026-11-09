@@ -3,8 +3,10 @@
   "version": "1.0.0-beta",
   "description": "WhatsApp Bot (Baileys)",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
   "author": "g.dev/nodt",
   "license": "MIT",
@@ -20,10 +22,9 @@
     "node": ">=22.13.0"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "6.7.24",
-    "@hapi/boom": "^10.0.1",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "ruhend-scraper": "^8.0.3",
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "7.0.0-rc13",
     "axios": "^1.7.9",
     "cfonts": "^3.1.1",
     "chalk": "^4.1.2",
@@ -31,8 +32,6 @@
     "fluent-ffmpeg": "^2.1.3",
     "form-data": "^4.0.1",
     "human-readable": "^0.2.1",
-    "moment-timezone": "^0.5.46",
-    "node-fetch": "^2.7.0",
     "node-webpmux": "^3.2.0",
     "pino": "^9.6.0",
     "qrcode-terminal": "^0.12.0",

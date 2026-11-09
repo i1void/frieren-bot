@@ -1,7 +1,6 @@
-const { getSession } = require('../../lib/menfess')
+import { getSession } from '../../lib/menfess.js'
 
-// Abuse handling: the owner can see who is behind a menfess code (for example after a report).
-module.exports = {
+export default {
   usage: ['menfesslog'],
   use: 'code',
   category: 'owner',

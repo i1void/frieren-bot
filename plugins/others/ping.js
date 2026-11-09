@@ -1,6 +1,6 @@
-const { runtime } = require('../../lib/myfunc')
+import { runtime } from '../../lib/utils.js'
 
-module.exports = {
+export default {
   usage: ['ping'],
   category: 'others',
   execute: async ({ sock, m, reply }) => {

@@ -1,6 +1,6 @@
-const { addLimit } = require('../../lib/db')
+import { addLimit } from '../../lib/limits.js'
 
-module.exports = {
+export default {
   usage: ['addlimit'],
   category: 'owner',
   ownerOnly: true,

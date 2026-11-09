@@ -1,12 +1,10 @@
-const { isAntiLinkEnabled } = require('../../lib/antilink')
-const { getGroupAdmins } = require('../../lib/myfunc')
+import { isAntiLinkEnabled } from '../../lib/antilink.js'
+import { getGroupAdmins } from '../../lib/utils.js'
 
 const GROUP_LINK = /https?:\/\/(chat\.whatsapp\.com|wa\.me|www\.whatsapp\.com\/invite)\/[a-zA-Z0-9]+/i
 const numberOf = (jid) => String(jid).split('@')[0]
 
-// Deletes group invite links and removes the sender, in groups where "antilink on" was used.
-// Admins are left alone, and so is everyone when the bot is not an admin (it could not remove anyone).
-module.exports = {
+export default {
   name: 'anti-link',
   event: true,
   groupOnly: true,

@@ -1,13 +1,11 @@
-const fs = require('fs')
-const os = require('os')
-const path = require('path')
-const { db } = require('../../lib/database')
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { db } from '../../lib/sqlite.js'
 
 const stamp = () => new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 13)
 
-// Sends a consistent copy of bot.db (VACUUM INTO also folds in the WAL file) as a document.
-// The WhatsApp session is NOT included: it holds the login and must never be sent around.
-module.exports = {
+export default {
   usage: ['backup'],
   category: 'owner',
   ownerOnly: true,

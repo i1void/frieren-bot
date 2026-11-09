@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['chatgpt'],
   hidden: ['gpt'],
   use: 'question',

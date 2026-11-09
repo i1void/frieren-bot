@@ -1,6 +1,6 @@
-const { listGroups, isMuted, getRent, formatLeft } = require('../../lib/group')
+import { listGroups, isMuted, getRent, formatLeft } from '../../lib/group.js'
 
-module.exports = {
+export default {
   usage: ['groups'],
   use: '',
   category: 'owner',

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['link'],
   hidden: ['linkgc'],
   category: 'admin',

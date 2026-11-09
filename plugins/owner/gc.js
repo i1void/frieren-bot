@@ -1,8 +1,7 @@
-const { listGroups, isMuted, setMuted, getRent, addDays, setForever, resetRent, forgetGroup, formatLeft } = require('../../lib/group')
-const { getGroupAdmins } = require('../../lib/myfunc')
+import { listGroups, isMuted, setMuted, getRent, addDays, setForever, resetRent, forgetGroup, formatLeft } from '../../lib/group.js'
+import { getGroupAdmins } from '../../lib/utils.js'
 
-// Owner tool to manage another group by its number from .groups.
-module.exports = {
+export default {
   usage: ['gc'],
   use: '<number> <option>',
   category: 'owner',

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['hidetag'],
   use: 'teks',
   category: 'admin',

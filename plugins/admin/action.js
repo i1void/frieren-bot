@@ -1,12 +1,9 @@
-// Member actions for group admins: add, kick, promote, demote. The bot must be an admin too.
 const ACTIONS = {
   kick: { update: 'remove', ask: 'Tag/reply the user you want to remove.' },
   promote: { update: 'promote', ask: 'Tag/reply the user you want to promote.' },
   demote: { update: 'demote', ask: 'Tag/reply the user you want to demote.' },
 }
 
-// What WhatsApp answers when it cannot add someone (the status code of groupParticipantsUpdate).
-// 200 is success. Meanings follow the codes documented by whatsapp-web.js (addParticipants).
 const ADD_PROBLEMS = {
   403: 'this number can only be invited privately (their privacy settings do not allow being added)',
   404: 'this number is not registered on WhatsApp',
@@ -41,7 +38,7 @@ async function addMember({ sock, m, prefix, text, reply }) {
   reply(message)
 }
 
-module.exports = {
+export default {
   usage: ['add', 'kick', 'promote', 'demote'],
   use: { add: 'nomor', kick: '@tag or reply', promote: '@tag or reply', demote: '@tag or reply' },
   category: 'admin',

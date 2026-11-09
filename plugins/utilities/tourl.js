@@ -1,6 +1,6 @@
-const upload = require('../../lib/uploadFile')
+import upload from '../../lib/uploadFile.js'
 
-module.exports = {
+export default {
   usage: ['tourl'],
   category: 'utilities',
   execute: async ({ sock, m, prefix, reply }) => {

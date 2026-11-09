@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['join'],
   use: 'link',
   category: 'owner',

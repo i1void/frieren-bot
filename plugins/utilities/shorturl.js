@@ -1,6 +1,6 @@
-const { shorten } = require('../../lib/uploadFile')
+import { shorten } from '../../lib/uploadFile.js'
 
-module.exports = {
+export default {
   usage: ['shorturl'],
   use: 'link',
   category: 'utilities',

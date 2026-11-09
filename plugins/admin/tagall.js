@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['tagall'],
   use: 'teks',
   category: 'admin',

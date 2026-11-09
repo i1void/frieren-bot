@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['broadcast'],
   hidden: ['bc'],
   use: 'teks',

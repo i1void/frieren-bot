@@ -1,11 +1,11 @@
-const os = require('os')
-const { runtime, formatp } = require('../../lib/myfunc')
-const { countUsers } = require('../../lib/db')
-const { getBanned, getPremium } = require('../../lib/access')
-const { listPlugins } = require('../../lib/pluginLoader')
-const { getDisabledPlugins } = require('../../lib/settings')
+import os from 'node:os'
+import { runtime, formatp } from '../../lib/utils.js'
+import { countUsers } from '../../lib/limits.js'
+import { getBanned, getPremium } from '../../lib/access.js'
+import { listPlugins } from '../../lib/pluginLoader.js'
+import { getDisabledPlugins } from '../../lib/settings.js'
 
-module.exports = {
+export default {
   usage: ['botstat'],
   hidden: ['botstatus', 'stat'],
   category: 'others',

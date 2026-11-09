@@ -1,12 +1,9 @@
-const { getPlugin } = require('../../lib/pluginLoader')
-const { getDisabledCommands, setCommandDisabled } = require('../../lib/settings')
+import { getPlugin } from '../../lib/pluginLoader.js'
+import { getDisabledCommands, setCommandDisabled } from '../../lib/settings.js'
 
-// Never switched off, or the owner could lock themselves out of turning things back on.
 const PROTECTED = ['plugin', 'disable']
 
-// Switches off a single command while the other commands of the same plugin keep working.
-// (.plugin off <cmd> switches off the whole plugin.)
-module.exports = {
+export default {
   usage: ['disable', 'enable'],
   use: '<command>',
   category: 'owner',

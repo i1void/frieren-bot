@@ -1,6 +1,6 @@
-const { isMuted, setMuted } = require('../../lib/group')
+import { isMuted, setMuted } from '../../lib/group.js'
 
-module.exports = {
+export default {
   usage: ['mute'],
   use: 'on/off',
   category: 'admin',

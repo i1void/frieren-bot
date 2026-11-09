@@ -1,15 +1,13 @@
-const fs = require('fs')
-const os = require('os')
-const path = require('path')
-const { DatabaseSync } = require('node:sqlite')
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { DatabaseSync } from 'node:sqlite'
 
-const PENDING = path.join(__dirname, '..', '..', 'storage', 'database', 'restore.pending.db')
+const PENDING = path.join(import.meta.dirname, '..', '..', 'storage', 'database', 'restore.pending.db')
 const MAX_BYTES = 100 * 1024 * 1024
 const REQUIRED_TABLES = ['users', 'banned', 'premium']
 
-// Reply to a backup file with .restore. The file is checked, staged, and the bot restarts:
-// the swap happens at startup (lib/database.js) because the open database can't be replaced safely.
-module.exports = {
+export default {
   usage: ['restore'],
   use: 'reply backup file',
   category: 'owner',

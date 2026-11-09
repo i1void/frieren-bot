@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['script'],
   category: 'others',
   execute: async ({ config, reply }) =>

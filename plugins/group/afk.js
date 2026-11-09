@@ -1,10 +1,9 @@
-const { db } = require('../../lib/database')
+import { db } from '../../lib/sqlite.js'
 
-// AFK status, kept in bot.db. The detector in plugins/_events/afk.js reads the same table.
 db.exec('CREATE TABLE IF NOT EXISTS afk (jid TEXT PRIMARY KEY, since INTEGER NOT NULL, reason TEXT NOT NULL DEFAULT \'\')')
 const setAfk = db.prepare('INSERT OR REPLACE INTO afk (jid, since, reason) VALUES (?, ?, ?)')
 
-module.exports = {
+export default {
   usage: ['afk'],
   use: 'reason (optional)',
   category: 'group',

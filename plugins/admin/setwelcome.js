@@ -1,6 +1,6 @@
-const { setWelcome, setLeft } = require('../../lib/welcome')
+import { setWelcome, setLeft } from '../../lib/welcome.js'
 
-module.exports = {
+export default {
   usage: [],
   hidden: ['setwelcome', 'setleft'],
   use: 'text',

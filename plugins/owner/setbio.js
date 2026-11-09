@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   usage: ['setbio'],
   use: 'teks',
   category: 'owner',

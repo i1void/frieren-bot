@@ -1,42 +1,33 @@
-// This bot stores its data with node:sqlite, which needs Node.js 22.13 or newer.
-// Checked first, before anything else is loaded, so an old Node gets a clear message instead of a stack trace.
-{
-  const [major, minor] = process.versions.node.split('.').map(Number)
-  if (major < 22 || (major === 22 && minor < 13)) {
-    console.error(
-      `\n❌ This bot requires Node.js 22.13 or newer.\n` +
-        `   You are using Node.js ${process.versions.node}.\n` +
-        `   Please upgrade Node.js, then run the bot again.\n`
-    )
-    process.exit(1)
-  }
-}
+import './lib/quietLogs.js'
+import './lib/globals.js'
 
-// Load .env (API_KEY). Built into Node 22, no package needed. Missing file is fine.
-try {
-  process.loadEnvFile()
-} catch {}
-require('./lib/config') // globals: Api (void API client) and mess (reply messages)
-
-const {
-  default: makeWASocket,
+import {
+  makeWASocket,
   Browsers,
   DisconnectReason,
   useMultiFileAuthState,
   fetchLatestWaWebVersion,
   jidDecode,
-} = require('@whiskeysockets/baileys')
-const pino = require('pino')
-const chalk = require('chalk')
-const readline = require('readline')
-const qrcode = require('qrcode-terminal')
-const { Boom } = require('@hapi/boom')
-const config = require('./config')
-const { smsg, logMessage } = require('./lib/myfunc')
-const { welcomeHandler } = require('./lib/welcome')
-const { loadPlugins } = require('./lib/pluginLoader')
-const { startRentWatcher } = require('./lib/group')
-const { downloadMedia, imageToSticker, videoToSticker } = require('./lib/media')
+} from './lib/baileys.js'
+import pino from 'pino'
+import chalk from 'chalk'
+import CFonts from 'cfonts'
+import readline from 'node:readline'
+import qrcode from 'qrcode-terminal'
+import boom from '@hapi/boom'
+import config from './config.json' with { type: 'json' }
+import { smsg, logMessage } from './lib/message.js'
+import { welcomeHandler } from './lib/welcome.js'
+import { loadPlugins } from './lib/pluginLoader.js'
+import { startRentWatcher } from './lib/group.js'
+import { downloadMedia, imageToSticker, videoToSticker } from './lib/media.js'
+import handler from './handler.js'
+
+try {
+  process.loadEnvFile()
+} catch {}
+
+const { Boom } = boom
 
 const store = { contacts: {} }
 
@@ -55,10 +46,8 @@ function clearConsole() {
   console.clear()
 }
 
-// Big title (package "cfonts"). Plain text if it is not installed yet.
 function showBanner() {
   try {
-    const CFonts = require('cfonts')
     CFonts.say('FRIEREN BOT', { font: 'tiny', align: 'center', colors: ['system'] })
     CFonts.say('Github : https://github.com/i1void/frieren-bot', { font: 'console', align: 'center', colors: ['system'] })
   } catch {
@@ -66,8 +55,6 @@ function showBanner() {
   }
 }
 
-// Reconnect after a short pause so a failing connection cannot spin in a tight loop.
-// The restart WhatsApp asks for right after pairing (restartRequired) happens at once.
 function reconnect(reason) {
   const delay = reason === DisconnectReason.restartRequired ? 0 : 3000
   setTimeout(connectToWhatsApp, delay)
@@ -76,8 +63,12 @@ function reconnect(reason) {
 async function connectToWhatsApp() {
   const { state, saveCreds } = await useMultiFileAuthState(`session/${config.sessionName}`)
 
-  const { version, isLatest } = await fetchLatestWaWebVersion()
-  console.log(chalk.cyan(`Using WA v${version.join('.')}, isLatest: ${isLatest}`))
+  let version
+  try {
+    const latest = await fetchLatestWaWebVersion()
+    version = latest.version
+    console.log(chalk.cyan(`Using WA v${version.join('.')}, isLatest: ${latest.isLatest}`))
+  } catch {}
 
   const sock = makeWASocket({
     version,
@@ -126,7 +117,6 @@ async function connectToWhatsApp() {
   sock.sendText = (jid, text, quoted, options = {}) =>
     sock.sendMessage(jid, { text, ...options }, { quoted })
 
-  // 'file' is kept as an alias for 'document' since lib/myfunc.js's m.reply() uses it.
   sock.sendMedia = (jid, buffer, type = 'document', caption = '', quoted, options = {}) => {
     const key = type === 'file' ? 'document' : type
     return sock.sendMessage(jid, { [key]: buffer, caption, ...options }, { quoted })
@@ -149,9 +139,8 @@ async function connectToWhatsApp() {
 
   sock.serializeM = (m) => smsg(sock, m, store)
 
-  // Only live messages ("notify") are handled. "append" carries old history and
-  // must never re-run commands. One upsert can hold several messages: handle all.
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
+    // "append" is old history: never run commands from it
     if (type !== 'notify') return
     for (const mek of messages) {
       try {
@@ -167,7 +156,7 @@ async function connectToWhatsApp() {
         const m = smsg(sock, mek, store)
         if (!m) continue
         logMessage(sock, m)
-        require('./handler')(sock, m, store)
+        handler(sock, m, store)
       } catch (err) {
         console.error(err)
       }
@@ -196,7 +185,6 @@ async function connectToWhatsApp() {
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect, qr } = update
 
-    // Manual QR rendering (printQRInTerminal is deprecated in recent Baileys versions).
     if (qr && !config.usePairingCode) {
       qrcode.generate(qr, { small: true })
     }
@@ -238,10 +226,9 @@ async function connectToWhatsApp() {
   return sock
 }
 
-// A stray error in one handler must not take the whole bot down.
 process.on('unhandledRejection', (err) => console.error('Unhandled rejection:', err))
 process.on('uncaughtException', (err) => console.error('Uncaught exception:', err))
 
 showBanner()
-loadPlugins()
+await loadPlugins()
 connectToWhatsApp()

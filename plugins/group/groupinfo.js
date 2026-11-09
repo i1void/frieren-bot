@@ -1,14 +1,13 @@
-const { getTimezone } = require('../../lib/db')
+import { getTimezone } from '../../lib/limits.js'
 
 const MAX_DESC = 300
 
-// "21 Oct 2026" in the timezone from config.json.
 const formatDate = (seconds, config) =>
   new Intl.DateTimeFormat('en-GB', { timeZone: getTimezone(config), day: 'numeric', month: 'short', year: 'numeric' }).format(
     new Date(seconds * 1000)
   )
 
-module.exports = {
+export default {
   usage: ['groupinfo'],
   category: 'group',
   groupOnly: true,

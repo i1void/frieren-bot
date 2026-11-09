@@ -1,23 +1,18 @@
-// Command router. Commands themselves live in plugins/ (see lib/pluginLoader.js).
-const fs = require('fs')
-const chalk = require('chalk')
-const config = require('./config')
-const { sleep, getGroupAdmins } = require('./lib/myfunc')
-const { getUser, spendLimit, restoreLimit, getTimezone } = require('./lib/db')
-const { isBanned, hasPremium } = require('./lib/access')
-const { getDisabledPlugins, getDisabledCommands, isPluginDisabled, isGroupMode } = require('./lib/settings')
-const { suggestCommands } = require('./lib/suggest')
-const { getPlugin, listPlugins, listEvents } = require('./lib/pluginLoader')
-const { createAntiSpam } = require('./lib/antispam')
-const { isMuted } = require('./lib/group')
+import config from './config.json' with { type: 'json' }
+import { sleep, getGroupAdmins } from './lib/utils.js'
+import { getUser, spendLimit, restoreLimit, getTimezone } from './lib/limits.js'
+import { isBanned, hasPremium } from './lib/access.js'
+import { getDisabledPlugins, getDisabledCommands, isPluginDisabled, isGroupMode } from './lib/settings.js'
+import { suggestCommands } from './lib/suggest.js'
+import { getPlugin, listPlugins, listEvents } from './lib/pluginLoader.js'
+import { createAntiSpam } from './lib/antispam.js'
+import { isMuted } from './lib/group.js'
 
 const antiSpam = createAntiSpam(config.antiSpam)
 const PHONE_ARG = /^@?\+?\d[\d-]{7,}$/
 const TYPO_TTL = 3 * 60 * 1000
 const typoSessions = new Map() // sender -> { m, prefix, args, names, timer }
 
-// Returns the mess key to reply with, or null when allowed.
-// adminOnly / botAdmin imply groupOnly. The owner bypasses adminOnly but NOT botAdmin.
 function checkPermission(plugin, { isOwner, isGroup, isAdmin, isBotAdmin }) {
   if (plugin.ownerOnly && !isOwner) return 'ownerOnly'
   if ((plugin.groupOnly || plugin.adminOnly || plugin.botAdmin) && !isGroup) return 'groupOnly'
@@ -26,7 +21,6 @@ function checkPermission(plugin, { isOwner, isGroup, isAdmin, isBotAdmin }) {
   return null
 }
 
-// { prefix, usedPrefix, command, args } for a message that is a command, otherwise null.
 function parseCommand(body) {
   const usedPrefix = config.prefixes.find((p) => p && body.startsWith(p))
   const isCmd = usedPrefix !== undefined || (config.prefixes.includes('') && body.length > 0)
@@ -38,7 +32,6 @@ function parseCommand(body) {
   return command ? { prefix, usedPrefix: usedPrefix !== undefined, command, args } : null
 }
 
-// Enabled commands that are close to a mistyped one, best first.
 function typoSuggestions(command, isOwner) {
   const disabled = getDisabledPlugins()
   const offCommands = getDisabledCommands()
@@ -57,8 +50,6 @@ function typoSuggestions(command, isOwner) {
   })
 }
 
-// After a "Did you mean" list the user can answer with a number. The original message is kept,
-// so a command that needs a replied image or video still has it when it runs.
 function rememberTypo(m, { prefix, args }, hints) {
   clearTimeout(typoSessions.get(m.sender)?.timer)
   const timer = setTimeout(() => typoSessions.delete(m.sender), TYPO_TTL)
@@ -66,7 +57,6 @@ function rememberTypo(m, { prefix, args }, hints) {
   typoSessions.set(m.sender, { m, prefix, args, names: hints.map((h) => h.name), timer })
 }
 
-// When `m` is the number answer to a "Did you mean" list, returns the command to run instead.
 function takeTypoChoice(m) {
   const session = typoSessions.get(m.sender)
   const body = (m.text || '').trim()
@@ -87,13 +77,13 @@ const typoMessage = (command, prefix, hints) =>
 async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   const text = args.join(' ')
   const sender = m.sender
-  const senderNumber = sender.split('@')[0]
-  const isOwner = config.owner.map((v) => v.replace(/\D/g, '')).includes(senderNumber)
+  // one identity per person, even when a chat shows a LID instead of the number
+  const identity = m.senderPn || sender
+  const owners = config.owner.map((v) => v.replace(/\D/g, ''))
+  const isOwner = [sender, m.senderPn].filter(Boolean).some((jid) => owners.includes(jid.split('@')[0]))
 
-  if (isBanned(sender) && !isOwner) return
+  if (isBanned(identity) && !isOwner) return
 
-  // A muted group gets no replies at all, except mute and gc so it can always be undone.
-  // Event plugins (anti_link etc.) are not affected: they run before this point.
   if (m.chat.endsWith('@g.us') && isMuted(m.chat) && !['mute', 'gc'].includes(getPlugin(command)?.name)) return
 
   const reply = (teks, opts = {}) => sock.sendMessage(m.chat, { text: teks, ...opts }, { quoted: m })
@@ -112,24 +102,22 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   }
 
   if (!isOwner) {
-    const gate = antiSpam.check(sender)
+    const gate = antiSpam.check(identity)
     if (!gate.ok) return gate.notice ? reply(`${mess[gate.notice]} (${gate.wait}s)`) : undefined
   }
 
-  const isPremium = isOwner || hasPremium(sender)
+  const isPremium = isOwner || hasPremium(identity)
 
-  // Group mode: private chat is for premium users and the owner. .premium and .owner stay open to everyone.
   if (!m.chat.endsWith('@g.us') && isGroupMode() && !isPremium && !['premium', 'owner'].includes(plugin.name)) {
     return reply(`⚠️ The bot only works in groups right now. Private chat is for premium users.\nSend *${prefix}premium* to see how to upgrade.`)
   }
 
-  const user = getUser(sender, config)
+  const user = getUser(identity, config)
   if (isPremium) user.premium = true
 
   const isGroup = m.chat.endsWith('@g.us')
   const groupMetadata = isGroup ? await sock.groupMetadata(m.chat).catch(() => null) : null
   const groupAdmins = isGroup && groupMetadata ? getGroupAdmins(groupMetadata.participants, sock.decodeJid) : []
-  // The bot can be listed by its phone-number JID or by its LID, depending on the group.
   const botIds = [sock.user.id, sock.user.lid].filter(Boolean).map((jid) => sock.decodeJid(jid))
   const isBotAdmin = isGroup ? botIds.some((id) => groupAdmins.includes(id)) : false
   const isAdmin = isGroup ? groupAdmins.includes(sender) : false
@@ -146,12 +134,10 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
       ? [`${args[0].replace(/\D/g, '')}@s.whatsapp.net`]
       : []
 
-  // Spending a point is one atomic database update, so two commands running at
-  // the same time can never spend the same point twice.
   let spent = false
   const useLimit = () => {
     if (isPremium) return true
-    if (!spendLimit(sender, config)) {
+    if (!spendLimit(identity, config)) {
       reply(`${mess.limitHabis}\nYour limit resets every day at 00:00 (${getTimezone(config)}).`)
       return false
     }
@@ -159,12 +145,10 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
     return true
   }
 
-  // Gives back the limit spent by this command (once). Plugins call it when the
-  // job failed before anything was delivered.
   const refundLimit = () => {
     if (!spent) return
     spent = false
-    restoreLimit(sender)
+    restoreLimit(identity)
   }
 
   const ctx = {
@@ -192,7 +176,6 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
     refundLimit,
   }
 
-  // Safety net: a plugin that throws gets the limit back and the user gets an answer.
   try {
     await plugin.execute(ctx)
   } catch (err) {
@@ -202,11 +185,10 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
   }
 }
 
-module.exports = async (sock, m, store) => {
+export default async (sock, m, store) => {
   try {
     if (!m.message) return
 
-    // Event plugins see every message. One that returns true has handled it: nothing else runs.
     for (const event of listEvents()) {
       if (event.groupOnly && !m.chat.endsWith('@g.us')) continue
       try {
@@ -226,10 +208,3 @@ module.exports = async (sock, m, store) => {
   }
 }
 
-let file = require.resolve(__filename)
-fs.watchFile(file, () => {
-  fs.unwatchFile(file)
-  console.log(chalk.redBright(`Update '${__filename}'`))
-  delete require.cache[file]
-  require(file)
-})

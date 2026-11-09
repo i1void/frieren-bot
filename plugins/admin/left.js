@@ -1,6 +1,6 @@
-const { setLeftStatus } = require('../../lib/welcome')
+import { setLeftStatus } from '../../lib/welcome.js'
 
-module.exports = {
+export default {
   usage: ['left'],
   use: 'on/off',
   category: 'admin',

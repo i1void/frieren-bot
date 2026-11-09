@@ -1,7 +1,5 @@
-const { db } = require('../../lib/database')
+import { db } from '../../lib/sqlite.js'
 
-// Lets users post to the bot's WhatsApp Channel through the bot.
-// Needs `channelJid` in config.json (the bot's number must be the owner/admin of that channel).
 db.exec(`
   CREATE TABLE IF NOT EXISTS channel_posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +17,6 @@ const MAX_VIDEO_BYTES = 20 * 1024 * 1024
 const COOLDOWN = 60 * 1000 // per user, the owner is exempt
 const lastPost = new Map()
 
-// Non-owners may not advertise: WhatsApp links, wa.me, or anything that looks like a phone number.
 const CONTACT = /wa\.me|whatsapp\.com|(?:\+?\d[\s().-]*){9,}/i
 
 const RULES =
@@ -39,14 +36,13 @@ function channelJid(config) {
   return id.includes('@') ? id : `${id}@newsletter`
 }
 
-module.exports = {
+export default {
   usage: ['channel', 'sendtext', 'sendmedia'],
   use: '',
   category: 'others',
   limit: true,
   execute: async ({ sock, m, config, prefix, command, text, reply, isOwner, useLimit, refundLimit }) => {
     if (command === 'channel') {
-      // Owner only: who posted what recently (abuse handling).
       if (isOwner && text.trim().toLowerCase() === 'log') {
         const rows = lastPosts.all()
         if (!rows.length) return reply('Belum ada kiriman.')
@@ -87,7 +83,6 @@ module.exports = {
       return
     }
 
-    // sendmedia: the photo/video is either quoted or sent together with the command.
     const target = m.quoted?.mimetype ? m.quoted : m
     const info = target.msg || target
     const mime = info.mimetype || ''

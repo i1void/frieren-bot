@@ -1,5 +1,4 @@
-// Change the group name or description (group admins; the bot must be an admin too).
-module.exports = {
+export default {
   usage: ['setname', 'setdesc'],
   use: 'teks',
   category: 'admin',

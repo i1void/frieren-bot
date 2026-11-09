@@ -1,5 +1,5 @@
-const { db } = require('../../lib/database')
-const { runtime } = require('../../lib/myfunc')
+import { db } from '../../lib/sqlite.js'
+import { runtime } from '../../lib/utils.js'
 
 db.exec('CREATE TABLE IF NOT EXISTS afk (jid TEXT PRIMARY KEY, since INTEGER NOT NULL, reason TEXT NOT NULL DEFAULT \'\')')
 const find = db.prepare('SELECT since, reason FROM afk WHERE jid = ?')
@@ -10,17 +10,13 @@ const lastNotice = new Map()
 const tagOf = (jid) => String(jid).split('@')[0]
 const since = (ts) => runtime((Date.now() - ts) / 1000)
 
-// 1) An AFK person who writes again is back: the status is removed and the group is told.
-// 2) Someone who tags or replies to an AFK person is told that person is away (and why).
-// It never stops a message: commands in the same message still run.
-module.exports = {
+export default {
   name: 'afk-detector',
   event: true,
   groupOnly: true,
   execute: async ({ sock, m, config }) => {
     if (m.fromMe) return false
 
-    // ".afk" itself sets the status (plugins/group/afk.js), so it must not count as "coming back".
     const text = (m.text || '').trim()
     const isAfkCommand = config.prefixes.some((p) => p && text.startsWith(p) && /^afk(\s|$)/i.test(text.slice(p.length)))
 

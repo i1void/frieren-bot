@@ -1,9 +1,8 @@
-const { fromBuffer } = require('file-type')
+import { fromBuffer } from '../../lib/fileType.js'
 
-module.exports = {
-  // Each command name is also its endpoint: /images/<command>
+export default {
   usage: ['bluearchive', 'waifu', 'neko', 'kitsune'],
-  category: 'anime',
+  category: 'images',
   limit: true,
   execute: async ({ sock, m, command, reply, useLimit, refundLimit }) => {
     if (!useLimit()) return
