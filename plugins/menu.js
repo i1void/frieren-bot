@@ -66,7 +66,7 @@ export default {
     const thumbnail = await getThumbnail(config).catch(() => null)
     if (!thumbnail) return reply(plain, { mentions: [m.sender] })
 
-    const tapLink = config.menuLink || pkg.homepage
+    const tapLink = config.menuLink || 'https://github.com/i1void/frieren-bot'
 
     try {
       const { imageMessage } = await prepareWAMessageMedia({ image: thumbnail }, { upload: sock.waUploadToServer })
@@ -91,7 +91,7 @@ export default {
                         description: '',
                         currencyCode: '',
                         retailerId: '',
-                        url: config.menuLink || pkg.homepage,
+                        url: tapLink,
                         productImageCount: 1,
                       },
                       businessOwnerJid: '0@s.whatsapp.net',
@@ -113,8 +113,8 @@ export default {
               }),
               buttons: [
                 {
-                  name: 'quick_reply',
-                  buttonParamsJson: JSON.stringify({ display_text: 'Ping', id: `${prefix || config.prefixes.find(Boolean) || '.'}ping` }),
+                  name: 'cta_url',
+                  buttonParamsJson: JSON.stringify({ display_text: 'GitHub', url: tapLink, merchant_url: tapLink }),
                 },
               ],
             },
