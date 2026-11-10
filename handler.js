@@ -2,7 +2,7 @@ import config from './config.json' with { type: 'json' }
 import { sleep, getGroupAdmins } from './lib/utils.js'
 import { getUser, spendLimit, restoreLimit, getTimezone } from './lib/limits.js'
 import { isBanned, hasPremium } from './lib/access.js'
-import { getDisabledPlugins, getDisabledCommands, isPluginDisabled, isGroupMode } from './lib/settings.js'
+import { getDisabledPlugins, getDisabledCommands, isPluginDisabled, isGroupMode, isNoPrefix } from './lib/settings.js'
 import { suggestCommands } from './lib/suggest.js'
 import { getPlugin, listPlugins, listEvents } from './lib/pluginLoader.js'
 import { createAntiSpam } from './lib/antispam.js'
@@ -23,13 +23,17 @@ function checkPermission(plugin, { isOwner, isGroup, isAdmin, isBotAdmin }) {
 
 function parseCommand(body) {
   const usedPrefix = config.prefixes.find((p) => p && body.startsWith(p))
-  const isCmd = usedPrefix !== undefined || (config.prefixes.includes('') && body.length > 0)
-  if (!isCmd) return null
+  // no-prefix mode (owner command "noprefix", or "" inside config.prefixes): plain words count as commands
+  const noPrefix = usedPrefix === undefined && (isNoPrefix() || config.prefixes.includes(''))
+  if (usedPrefix === undefined && !noPrefix) return null
 
   const prefix = usedPrefix || ''
   const [rawCmd, ...args] = body.slice(prefix.length).trim().split(/\s+/)
   const command = (rawCmd || '').toLowerCase()
-  return command ? { prefix, usedPrefix: usedPrefix !== undefined, command, args } : null
+  if (!command) return null
+  // without a prefix only real commands run, so normal chat is never treated as a command
+  if (usedPrefix === undefined && !getPlugin(command)) return null
+  return { prefix, usedPrefix: usedPrefix !== undefined, command, args }
 }
 
 function typoSuggestions(command, isOwner) {
