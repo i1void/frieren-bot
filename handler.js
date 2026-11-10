@@ -8,6 +8,9 @@ import { getPlugin, listPlugins, listEvents } from './lib/pluginLoader.js'
 import { createAntiSpam } from './lib/antispam.js'
 import { isMuted } from './lib/group.js'
 
+// show "typing..." in the chat while a command is running (set to false to turn it off)
+const TYPING = true
+
 const antiSpam = createAntiSpam(config.antiSpam)
 const PHONE_ARG = /^@?\+?\d[\d-]{7,}$/
 const TYPO_TTL = 3 * 60 * 1000
@@ -180,12 +183,16 @@ async function run(sock, m, store, { prefix, usedPrefix, command, args }) {
     refundLimit,
   }
 
+  if (TYPING) sock.sendPresenceUpdate('composing', m.chat).catch(() => {})
+
   try {
     await plugin.execute(ctx)
   } catch (err) {
     console.error(`[plugin:${plugin.name}]`, err)
     refundLimit()
     reply(mess.error).catch(() => {})
+  } finally {
+    if (TYPING) sock.sendPresenceUpdate('paused', m.chat).catch(() => {})
   }
 }
 
