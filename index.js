@@ -78,17 +78,17 @@ async function connectToWhatsApp() {
     browser: Browsers.ubuntu('Chrome'),
   })
 
-  if (config.usePairingCode && !sock.authState.creds.registered) {
+  if (config.pairing.state && !sock.authState.creds.registered) {
     clearConsole()
-    let numberInput = config.botNumber
+    let numberInput = config.pairing.number
     if (!numberInput || numberInput.includes('X')) {
       numberInput = await question(
-        'Enter WhatsApp bot number with country code, digits only, no + or spaces\n' +
-          '(e.g. 14155552671 for US, 447911123456 for UK, 6281234567890 for Indonesia): '
+        chalk.cyan('Bot number ') + chalk.gray('(country code, digits only, e.g. 6281234567890)') + chalk.cyan(': ')
       )
     }
     setTimeout(async () => {
-      let code = await sock.requestPairingCode(numberInput.replace(/[^0-9]/g, ''))
+      const customCode = /^[A-Z0-9]{8}$/.test(config.pairing.code || '') ? config.pairing.code : undefined
+      let code = await sock.requestPairingCode(numberInput.replace(/[^0-9]/g, ''), customCode)
       code = code?.match(/.{1,4}/g)?.join('-') || code
       console.log(chalk.green(`Pairing Code: ${code}`))
     }, 3000)
@@ -185,7 +185,7 @@ async function connectToWhatsApp() {
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect, qr } = update
 
-    if (qr && !config.usePairingCode) {
+    if (qr && !config.pairing.state) {
       qrcode.generate(qr, { small: true })
     }
 
