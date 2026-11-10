@@ -1,4 +1,5 @@
 import { runtime } from '../lib/utils.js'
+import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from '../lib/baileys.js'
 import { getThumbnail } from '../lib/thumbnail.js'
 import { listPlugins } from '../lib/pluginLoader.js'
 import { getDisabledPlugins, getDisabledCommands, isPluginDisabled } from '../lib/settings.js'
@@ -58,30 +59,90 @@ export default {
       ...info.map(([k, v]) => `${BULLET} ${k.padEnd(pad)} : ${v}`),
       '```',
       ...body,
-      '',
-      `${BULLET} ${config.botName} · v${version}`,
     ].join('\n')
+    // the interactive menu already has the grey footer, so this line is only for the plain-text fallback
+    const plain = `${text}\n\n${BULLET} ${config.botName} · v${version}`
 
     const thumbnail = await getThumbnail(config).catch(() => null)
-    if (!thumbnail) return reply(text, { mentions: [m.sender] })
+    if (!thumbnail) return reply(plain, { mentions: [m.sender] })
 
-    await sock.sendMessage(
-      m.chat,
-      {
-        text,
-        mentions: [m.sender],
-        contextInfo: {
-          externalAdReply: {
-            title: config.botName,
-            body: `v${version}`,
-            thumbnail,
-            mediaType: 1,
-            renderLargerThumbnail: true,
-            sourceUrl: pkg.homepage,
-          },
+    const tapLink = config.menuLink || pkg.homepage
+
+    try {
+      const { imageMessage } = await prepareWAMessageMedia({ image: thumbnail }, { upload: sock.waUploadToServer })
+
+      const msg = generateWAMessageFromContent(
+        m.chat,
+        {
+          interactiveMessage: proto.Message.InteractiveMessage.create({
+            header: proto.Message.InteractiveMessage.Header.create(
+              config.menuHeader === 'image'
+                ? // plain image header: tapping it opens the normal image viewer
+                  { title: config.botName, subtitle: '', hasMediaAttachment: true, imageMessage }
+                : // product header (same as neoxr): the image is shown as a product photo
+                  {
+                    title: config.botName,
+                    subtitle: '',
+                    hasMediaAttachment: true,
+                    productMessage: {
+                      product: {
+                        productImage: imageMessage,
+                        title: config.botName,
+                        description: '',
+                        currencyCode: '',
+                        retailerId: '',
+                        url: config.menuLink || pkg.homepage,
+                        productImageCount: 1,
+                      },
+                      businessOwnerJid: '0@s.whatsapp.net',
+                    },
+                  }
+            ),
+            body: { text },
+            footer: { text: `${config.botName} · v${version}` },
+            nativeFlowMessage: {
+              // what happens when the header image is tapped (same idea as neoxr's tap_target_configuration)
+              messageParamsJson: JSON.stringify({
+                tap_target_configuration: {
+                  title: config.botName,
+                  description: `v${version}`,
+                  canonical_url: tapLink,
+                  domain: new URL(tapLink).origin,
+                  button_index: 0,
+                },
+              }),
+              buttons: [
+                {
+                  name: 'quick_reply',
+                  buttonParamsJson: JSON.stringify({ display_text: 'Ping', id: `${prefix || config.prefixes.find(Boolean) || '.'}ping` }),
+                },
+              ],
+            },
+            contextInfo: { mentionedJid: [m.sender] },
+          }),
         },
-      },
-      { quoted: m }
-    )
+        { quoted: m, userJid: sock.user.id }
+      )
+
+      await sock.relayMessage(m.chat, msg.message, {
+        messageId: msg.key.id,
+        additionalNodes: [
+          {
+            tag: 'biz',
+            attrs: {},
+            content: [
+              {
+                tag: 'interactive',
+                attrs: { type: 'native_flow', v: '1' },
+                content: [{ tag: 'native_flow', attrs: { v: '9', name: 'mixed' } }],
+              },
+            ],
+          },
+        ],
+      })
+    } catch (err) {
+      console.error('[menu] interactive failed:', err.message)
+      return reply(plain, { mentions: [m.sender] })
+    }
   },
 }
