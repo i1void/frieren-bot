@@ -2,7 +2,7 @@ import { runtime } from '../lib/utils.js'
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from '../lib/baileys.js'
 import { getThumbnail } from '../lib/thumbnail.js'
 import { listPlugins } from '../lib/pluginLoader.js'
-import { getDisabledPlugins, getDisabledCommands, isPluginDisabled } from '../lib/settings.js'
+import { getDisabledPlugins, getDisabledCommands, isPluginDisabled, getMenuStyle } from '../lib/settings.js'
 import pkg from '../package.json' with { type: 'json' }
 const { version } = pkg
 
@@ -20,7 +20,7 @@ export default {
   usage: [],
   hidden: ['menu', 'help'],
   category: 'others',
-  execute: async ({ sock, m, config, prefix, reply, isOwner, isPremium }) => {
+  execute: async ({ sock, m, config, prefix, args, reply, isOwner, isPremium }) => {
     const disabled = getDisabledPlugins()
     const offCommands = getDisabledCommands()
     const statusUser = isOwner ? 'Owner 🎴' : isPremium ? 'Premium 💎' : 'Free 😺'
@@ -36,13 +36,25 @@ export default {
       }
     }
 
-    const body = Object.keys(sections)
-      .sort()
-      .flatMap((category, i) => [
-        ...(i ? [''] : []),
-        `⌗ *${category.toUpperCase()}*`,
-        ...sections[category].sort().map((line) => `- ${prefix}${line}`),
-      ])
+    const categories = Object.keys(sections).sort()
+    const style = getMenuStyle()
+
+    const wanted = args?.[0]?.toLowerCase()
+    if (style !== 1 && wanted) {
+      const category = categories.find((c) => c.toLowerCase() === wanted)
+      if (!category) return reply(`Category not found.\nExample: ${prefix}menu ${categories[0] || 'others'}`)
+      return reply([`⌗ *${category.toUpperCase()}*`, ...sections[category].sort().map((line) => `- ${prefix}${line}`)].join('\n'))
+    }
+
+    const fullList = categories.flatMap((category, i) => [
+      ...(i ? [''] : []),
+      `⌗ *${category.toUpperCase()}*`,
+      ...sections[category].sort().map((line) => `- ${prefix}${line}`),
+    ])
+    const categoryList = categories.map((category) => `- ${prefix}menu ${category} (${sections[category].length})`)
+
+    const body = style === 1 ? fullList : style === 2 ? ['', '⌗ *CATEGORIES*', ...categoryList] : []
+    const plainBody = style === 1 ? fullList : ['', '⌗ *CATEGORIES*', ...categoryList]
 
     const info = [
       ['creator', config.ownerName],
@@ -52,16 +64,16 @@ export default {
     ]
     const pad = Math.max(...info.map(([k]) => k.length))
 
-    const text = [
+    const head = [
       `${greeting()}, @${senderTag} 👋`,
       `I'm *${config.botName}*, an automated WhatsApp bot.`,
       '```',
       ...info.map(([k, v]) => `${BULLET} ${k.padEnd(pad)} : ${v}`),
       '```',
-      ...body,
-    ].join('\n')
+    ]
+    const text = [...head, ...body].join('\n')
     // the interactive menu already has the grey footer, so this line is only for the plain-text fallback
-    const plain = `${text}\n\n${BULLET} ${config.botName} · v${version}`
+    const plain = `${[...head, ...plainBody].join('\n')}\n\n${BULLET} ${config.botName} · v${version}`
 
     const thumbnail = await getThumbnail(config).catch(() => null)
     if (!thumbnail) return reply(plain, { mentions: [m.sender] })
@@ -79,7 +91,7 @@ export default {
               config.menuHeader === 'image'
                 ? // plain image header: tapping it opens the normal image viewer
                   { title: config.botName, subtitle: '', hasMediaAttachment: true, imageMessage }
-                : // product header (same as neoxr): the image is shown as a product photo
+                : // product header: the image is shown as a product photo
                   {
                     title: config.botName,
                     subtitle: '',
@@ -101,7 +113,6 @@ export default {
             body: { text },
             footer: { text: `${config.botName} · v${version}` },
             nativeFlowMessage: {
-              // what happens when the header image is tapped (same idea as neoxr's tap_target_configuration)
               messageParamsJson: JSON.stringify({
                 tap_target_configuration: {
                   title: config.botName,
@@ -111,12 +122,32 @@ export default {
                   button_index: 0,
                 },
               }),
-              buttons: [
-                {
-                  name: 'cta_url',
-                  buttonParamsJson: JSON.stringify({ display_text: 'GitHub', url: tapLink, merchant_url: tapLink }),
-                },
-              ],
+              buttons:
+                style === 3
+                  ? [
+                      {
+                        name: 'single_select',
+                        buttonParamsJson: JSON.stringify({
+                          title: 'Tap Here!',
+                          sections: [
+                            {
+                              title: 'Categories',
+                              rows: categories.map((category) => ({
+                                title: category.charAt(0).toUpperCase() + category.slice(1),
+                                description: `There are ${sections[category].length} commands`,
+                                id: `${prefix}menu ${category}`,
+                              })),
+                            },
+                          ],
+                        }),
+                      },
+                    ]
+                  : [
+                      {
+                        name: 'cta_url',
+                        buttonParamsJson: JSON.stringify({ display_text: 'GitHub', url: tapLink, merchant_url: tapLink }),
+                      },
+                    ],
             },
             contextInfo: { mentionedJid: [m.sender] },
           }),
