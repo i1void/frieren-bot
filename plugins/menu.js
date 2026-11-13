@@ -62,14 +62,12 @@ export default {
       ['mode', botMode],
       ['status', statusUser],
     ]
-    const pad = Math.max(...info.map(([k]) => k.length))
 
     const head = [
       `${greeting()}, @${senderTag} 👋`,
       `I'm *${config.botName}*, an automated WhatsApp bot.`,
-      '```',
-      ...info.map(([k, v]) => `${BULLET} ${k.padEnd(pad)} : ${v}`),
-      '```',
+      '',
+      ...info.map(([k, v]) => `${BULLET} ${k}: ${v}`),
     ]
     const text = [...head, ...body].join('\n')
     // the interactive menu already has the grey footer, so this line is only for the plain-text fallback
