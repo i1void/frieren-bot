@@ -28,33 +28,25 @@ Settings live in two files: `config.json` and `.env`.
 
 ```Javascript
 {
+   "owner": ["62XXXXXXXXXX"],
+   "ownerName": "Owner",
+   "botName": "Frieren Bot",
+   "packName": "Frieren",
+   "authorName": "Void",
    "sessionName": "frieren",
+   "prefixes": ["#", ".", "!", "/"],
+   "isPublic": true, // Set to "false" to only answer the bot's own number
+   "countryCode": "62",
+   "limit": { "free": 15, "premium": 10000 }, // Usage limit per day
+   "antiSpam": { "cooldown": 3, "warnAt": 3, "blockAt": 5, "blockMinutes": 10 },
+   "thumbnail": "", // Menu thumbnail link (optional). Empty = use storage/media/image/thumb.jpg
+   "menuLink": "", // Link opened when the menu header is tapped (empty = GitHub repo)
+   "channelJid": "",
    "pairing": {
       "state": true, // Set to "false" to scan the QR code instead
       "number": "62XXXXXXXXXX", // Your bot number (the console asks if left as is)
       "code": "" // Custom pairing code, 8 chars A-Z/0-9 (empty = random)
-   },
-   "botName": "Frieren Bot",
-   "owner": ["62XXXXXXXXXX"],
-   "ownerName": "Owner",
-   "packName": "Frieren",
-   "authorName": "Void",
-   "prefixes": ["#", ".", "!", "/"],
-   "isPublic": true, // Set to "false" to only answer the bot's own number
-   "countryCode": "62",
-   "limit": {
-      "free": 15, // Usage limit per day
-      "premium": 10000
-   },
-   "antiSpam": {
-      "cooldown": 3,
-      "warnAt": 3,
-      "blockAt": 5,
-      "blockMinutes": 10
-   },
-   "thumbnail": "", // Menu thumbnail link (optional). Empty = use storage/media/image/thumb.jpg
-   "menuLink": "", // Link opened when the menu header is tapped (empty = GitHub repo)
-   "channelJid": ""
+   }
 }
 ```
 
