@@ -51,7 +51,7 @@ export default {
       `⌗ *${category.toUpperCase()}*`,
       ...sections[category].sort().map((line) => `- ${prefix}${line}`),
     ])
-    const categoryList = categories.map((category) => `- ${prefix}menu ${category} (${sections[category].length})`)
+    const categoryList = categories.map((category) => `- ${prefix}menu ${category}`)
 
     const body = style === 1 ? fullList : style === 2 ? ['', '⌗ *CATEGORIES*', ...categoryList] : []
     const plainBody = style === 1 ? fullList : ['', '⌗ *CATEGORIES*', ...categoryList]
