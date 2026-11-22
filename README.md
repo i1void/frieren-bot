@@ -51,7 +51,7 @@ Settings live in two files: `config.json` and `.env`.
 ```
 
 ```.env
-### REST API key (optional, default: Void API : https://api.i1void.is-a.dev)
+### REST API key (optional, default: Void API : https://ivoid.web.id)
 ### The API is free without a key, a key only raises the rate limit
 API_KEY=
 
